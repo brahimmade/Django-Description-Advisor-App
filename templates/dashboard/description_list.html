@@ -29,6 +29,7 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Id</th>
                         <th>Text</th>
                         <th>isCore</th>
@@ -40,6 +41,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>#</th>
                         <th>Id</th>
                         <th>Text</th>
                         <th>isCore</th>
@@ -52,6 +54,7 @@
                 <tbody>
                     {% for object in object_list %}
                     <tr>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ object.id }}</td>
                         <td>{{ object.text }}</td>
                         <td>{{ object.is_core }}</td>

@@ -19,5 +19,12 @@ urlpatterns = [
     path("description/create/",views.DescriptionCreateView.as_view(),name="description-create"),
     path("description/<int:pk>/edit/",views.DescriptionEditView.as_view(),name="description-edit"),
     path("description/<int:pk>/delete/",views.DescriptionDeleteView.as_view(),name="description-delete"),
+    
+    
+    # jobs urls
+    path("job-title/",views.JobTitleListView.as_view(),name="job-title-list"),
+    path("job-title/create/",views.JobTitleCreateView.as_view(),name="job-title-create"),
+    path("job-title/<int:pk>/edit/",views.JobTitleEditView.as_view(),name="job-title-edit"),
+    path("job-title/<int:pk>/delete/",views.JobTitleDeleteView.as_view(),name="job-title-delete"),
 ]
 
