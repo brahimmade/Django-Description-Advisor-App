@@ -133,3 +133,19 @@ AUTH_PROFILE_MODULE = "accounts.User"
 # accounts authentication settings
 LOGIN_REDIRECT_URL = '/dashboard'
 LOGOUT_REDIRECT_URL = '/'
+
+# static and media configs
+if not DEBUG:
+    STATIC_ROOT = "/static/"
+    MEDIA_ROOT = "/media/"
+    
+else:
+    STATIC_ROOT = BASE_DIR / "static"
+    MEDIA_ROOT = BASE_DIR / "media"
+
+    STATICFILES_DIRS = [
+        (BASE_DIR / "staticfiles"),
+    ]
+
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"

@@ -34,7 +34,7 @@ class AuthenticationForm(form.AuthenticationForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['captcha'].label = ""
+        
         self.fields['username'].widget.attrs.update(
             {'class': 'form-control form-control-user', 'placeholder': 'Enter Email Address...'})
         self.fields['username'].label = "Email Address"
@@ -59,7 +59,7 @@ class CustomPasswordResetForm(PasswordResetForm):
     
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
-        self.fields['captcha'].label = ""
+        
         self.fields['email'].widget.attrs.update(
             {'class': 'form-control form-control-user', 'placeholder': 'Enter Email Address...'})
 

@@ -1,0 +1,79 @@
+{% extends "registration/base.html" %}
+{% load static %}
+{% block title %} Dashboard | Registration {% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'assets/css/styles.css' %}" rel="stylesheet">
+<style>
+  a.disabled {
+    pointer-events: none !important; 
+    cursor: default !important;
+  }
+  body{
+    background-color:#0061f2;
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container-xl px-4">
+                <div class="row justify-content-center">
+                    <div class="col-xl-5 col-lg-6 col-md-8 col-sm-11">
+                        <!-- Social login form-->
+                        <div class="card my-5">
+                            <div class="card-body p-5 text-center">
+                              <a href="{% url 'website:index' %}" class="logo">
+                                <img src="{% static 'assets/img/logo-v4.png' %}" style="width:50%" alt="">
+                              </a>
+                            </div>
+                            <hr class="my-0" />
+                            <div class="card-body p-5">
+                                <!-- Login form-->
+                                <form class="user" method="post" action=".">
+  
+                                  {% csrf_token %}
+                                  
+                                  {{ form.as_p }}
+                                    <!-- Form Group (forgot password link)-->
+                                    
+                                    <!-- Form Group (login box)-->
+                                    <div class="d-flex align-items-center justify-content-between mb-0">
+                                        <div class="form-check">
+                                            
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Register</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <hr class="my-0" />
+                            <div class="card-body px-5 py-4">
+                                <div class="small text-center">
+                                    <a class="small" href="{% url 'accounts:login' %}">Already have an account? Login!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="layoutAuthentication_footer">
+        <footer class="footer-admin mt-auto footer-dark">
+            <div class="container-xl px-4">
+                <div class="row">
+                    <div class="col-md-6 small">Copyright © 2022 W O M Technologies L.L.C. All Rights Reserved.</div>
+                    <div class="col-md-6 text-md-end small">
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_js %}
+
+{% endblock %}

@@ -11,7 +11,8 @@ class JobTitle(models.Model):
     def __str__(self):
         return self.name
     
-
+    class Meta:
+        ordering = ('-created_date',)
 class Skill(models.Model):
     name = models.CharField(max_length=200)
     is_core = models.BooleanField(default=True)
@@ -22,7 +23,8 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
-
+    class Meta:
+        ordering = ('-created_date',)
     # def get_absolute_url(self):
     #     return reverse('dashboard:skill-')
 
