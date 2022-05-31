@@ -9,13 +9,9 @@
 </head>
 
 <body>
-    <h1>Description Create</h1>
-    <form method="post" action=".">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit"> Submit</button>
-    </form>
-    <p><a href="{% url 'advisor:description-list' %}">back</a></p>
+    <h1>Skill Detail</h1>
+    <p>{{ object.id }} - {{ object.name }}</p>
+
 </body>
 
 </html>

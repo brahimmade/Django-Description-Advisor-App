@@ -7,14 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Description Detail</h1>
-    
-
-    <ul>
-        <li>
-            <p><span>{{object_detail.id}}</span> {{object_detail.text}}</p>
-        </li>
-    </ul>
-    <p><a href="{% url 'advisor:description-list' %}">back</a></p>
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit"> Submit</button>
+    </form>
 </body>
 </html>

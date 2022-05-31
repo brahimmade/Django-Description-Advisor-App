@@ -4,6 +4,7 @@ from django.db import models
 
 class JobTitle(models.Model):
     name = models.CharField(max_length=250)
+    is_core = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     
@@ -13,12 +14,17 @@ class JobTitle(models.Model):
 
 class Skill(models.Model):
     name = models.CharField(max_length=200)
+    is_core = models.BooleanField(default=True)
     job_title = models.ManyToManyField(JobTitle)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
+
+
+    # def get_absolute_url(self):
+    #     return reverse('dashboard:skill-')
 
 class Description(models.Model):
     job_title = models.ManyToManyField(JobTitle)
@@ -35,4 +41,4 @@ class Description(models.Model):
     
     @property
     def snippets(self):
-        return self.text[:20] + "..."
+        return f"{self.text[:20]} ..."
