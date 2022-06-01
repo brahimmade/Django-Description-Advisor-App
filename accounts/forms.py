@@ -15,7 +15,6 @@ class RegisterForm(form.UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
-        self.fields['captcha'].label = ""
         self.fields['email'].widget.attrs.update(
             {'class': 'form-control form-control-user', 'placeholder': 'Enter Email Address...'})
         self.fields['email'].label = "Email Address"

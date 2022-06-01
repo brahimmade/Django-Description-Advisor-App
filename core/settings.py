@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-uzt4z0#uof4s0@!*09zpvd)774s=u%+$6mz+p!2#za@+ty)*_h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -149,3 +149,10 @@ else:
 
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'cache',
+    }
+}

@@ -9,14 +9,15 @@ from django.contrib.auth.mixins import (
 )
 from .models import Description, Skill, JobTitle
 from .forms import DescriptionForm
-
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 
 class DashboardIndex(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/index.html'
 
-
+@method_decorator(cache_page(30),name='dispatch')
 class SkillListView(ListView):
     queryset = Skill.objects.all()
     template_name = 'dashboard/skill_list.html'
@@ -57,7 +58,7 @@ class SkillDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('dashboard:skill-list', kwargs={})
 
-
+@method_decorator(cache_page(30),name='dispatch')
 class DescriptionListView(ListView):
     queryset = Description.objects.all()
     template_name = 'dashboard/description_list.html'
@@ -98,7 +99,7 @@ class DescriptionDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('dashboard:description-list', kwargs={})
 
-
+@method_decorator(cache_page(30),name='dispatch')
 class JobTitleListView(ListView):
     queryset = JobTitle.objects.all()
     template_name = 'dashboard/job_title_list.html'
