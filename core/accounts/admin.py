@@ -11,7 +11,6 @@ class UserAdminConfig(UserAdmin):
     list_display = ("email", "is_active", "is_staff")
     fieldsets = (
         ("Authentication", {"fields": ("email","password")}),
-        ("UserType", {"fields": ("type",)}),
         ("Permissions", {"fields": ("is_staff", "is_active")}),
         (
             "Group Permissions",
