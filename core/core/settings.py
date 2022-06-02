@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'dashboard',
+    "rest_framework",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -159,3 +161,21 @@ CACHES = {
         'LOCATION': BASE_DIR / 'cache',
     }
 }
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
+if not DEBUG:
+    REST_FRAMEWORK.update(
+        {
+            "DEFAULT_RENDERER_CLASSES": (
+                "rest_framework.renderers.JSONRenderer",
+            )
+        }
+    )

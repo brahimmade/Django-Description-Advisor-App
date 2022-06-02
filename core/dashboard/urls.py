@@ -26,5 +26,6 @@ urlpatterns = [
     path("job-title/create/",views.JobTitleCreateView.as_view(),name="job-title-create"),
     path("job-title/<int:pk>/edit/",views.JobTitleEditView.as_view(),name="job-title-edit"),
     path("job-title/<int:pk>/delete/",views.JobTitleDeleteView.as_view(),name="job-title-delete"),
+    path("api/v1/",include('dashboard.api.v1.urls')),
 ]
 

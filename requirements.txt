@@ -1,7 +1,23 @@
-# general  modules
-django >3.2,<3.3
-python-decouple
-Pillow
+Django>3.2,<3.3
+djangorestframework>3.12,<3.13
+django-cors-headers
+markdown
+django-filter
+django-decouple
+pillow
 
-# deployment module
+# third party apps
+djoser
+djangorestframework_simplejwt
+
+# linting and test packages
+flake8
+black
+faker
+
+# production packages
 gunicorn
+
+# api docs
+drf-yasg
+drf-yasg[validation]
