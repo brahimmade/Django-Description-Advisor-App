@@ -58,7 +58,7 @@
                         <td>{{ object.id }}</td>
                         <td>{{ object.text|safe }}</td>
                         <td>{{ object.is_core }}</td>
-                        <td>{% for title in object.job_title.all %}<small>{{ title }}</small> {% endfor %}</td>
+                        <td>{% for title in object.job_title.all %}<small>{{ title }} {% if not forloop.last %} ,{% endif %}</small> {% endfor %}</td>
                         <td>{{ object.updated_date }}</td>
                         <td>{{ object.created_date }}</td>
                         <td>

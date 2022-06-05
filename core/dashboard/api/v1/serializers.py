@@ -19,4 +19,21 @@ class SkillArchiveSerializer(serializers.Serializer):
             raise serializers.ValidationError({"detail":"it is already archived"})
         attrs['skill_obj'] = skill_obj
         return super().validate(attrs)
-    
+
+
+class JobTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobTitle
+        fields = ["id", "name",'is_core','is_archived']
+        
+    def validate(self, attrs):
+        return super().validate(attrs)
+
+
+class DescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Description
+        fields = ["id", "text",'is_core','is_archived']
+        
+    def validate(self, attrs):
+        return super().validate(attrs)
