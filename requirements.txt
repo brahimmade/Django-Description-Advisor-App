@@ -9,6 +9,7 @@ pillow
 # third party apps
 djoser
 djangorestframework_simplejwt
+django-summernote
 
 # linting and test packages
 flake8

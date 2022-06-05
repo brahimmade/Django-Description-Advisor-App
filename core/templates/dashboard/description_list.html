@@ -56,7 +56,7 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ object.id }}</td>
-                        <td>{{ object.text }}</td>
+                        <td>{{ object.text|safe }}</td>
                         <td>{{ object.is_core }}</td>
                         <td>{% for title in object.job_title.all %}<small>{{ title }}</small> {% endfor %}</td>
                         <td>{{ object.updated_date }}</td>

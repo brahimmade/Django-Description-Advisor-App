@@ -66,7 +66,8 @@
                                 href="{% url 'dashboard:skill-edit' pk=object.pk %}">Edit</a>
                             <!-- <a class="btn btn-secondary btn-xs" type="button"
                                 href="">Show</a> -->
-
+                            <a class="btn btn-success btn-xs" type="button"
+                                href="{% url 'dashboard:skill-archive' pk=object.pk %}">Archive</a>
                             {% if not object.is_core %}
                             <a class="btn btn-danger btn-xs" type="button"
                                 href="{% url 'dashboard:skill-delete' pk=object.pk %}">Delete</a>

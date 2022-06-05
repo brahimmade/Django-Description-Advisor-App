@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'dashboard',
     "rest_framework",
     "django_filters",
+    "drf_yasg",
+    "django_summernote",
 ]
 
 MIDDLEWARE = [

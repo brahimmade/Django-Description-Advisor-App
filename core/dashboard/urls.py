@@ -13,12 +13,14 @@ urlpatterns = [
     # path("skill/<int:pk>/",views.SkillDetailView.as_view(),name="skill-detail"),
     path("skill/<int:pk>/edit/",views.SkillEditView.as_view(),name="skill-edit"),
     path("skill/<int:pk>/delete/",views.SkillDeleteView.as_view(),name="skill-delete"),
+    path("skill/<int:pk>/archive/",views.SkillArchiveView.as_view(),name="skill-archive"),
     
     # description urls
     path("description/",views.DescriptionListView.as_view(),name="description-list"),
     path("description/create/",views.DescriptionCreateView.as_view(),name="description-create"),
     path("description/<int:pk>/edit/",views.DescriptionEditView.as_view(),name="description-edit"),
     path("description/<int:pk>/delete/",views.DescriptionDeleteView.as_view(),name="description-delete"),
+    path("description/<int:pk>/archive/",views.DescriptionArchiveView.as_view(),name="description-archive"),
     
     
     # jobs urls
@@ -26,6 +28,9 @@ urlpatterns = [
     path("job-title/create/",views.JobTitleCreateView.as_view(),name="job-title-create"),
     path("job-title/<int:pk>/edit/",views.JobTitleEditView.as_view(),name="job-title-edit"),
     path("job-title/<int:pk>/delete/",views.JobTitleDeleteView.as_view(),name="job-title-delete"),
+    path("job-title/<int:pk>/archive/",views.JobTitleArchiveView.as_view(),name="job-title-archive"),
+    
+    
     path("api/v1/",include('dashboard.api.v1.urls')),
 ]
 
