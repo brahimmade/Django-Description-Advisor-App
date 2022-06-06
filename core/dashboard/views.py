@@ -46,7 +46,8 @@ class SkillDetailView(LoginRequiredMixin, DetailView):
 class SkillEditView(LoginRequiredMixin, UpdateView):
     queryset = Skill.objects.all()
     template_name = 'dashboard/skill_edit.html'
-    fields = ['name', 'job_title']
+    form_class = SkillForm
+    # fields = ['name', 'job_title']
 
     def get_success_url(self):
         return reverse('dashboard:skill-list', kwargs={})

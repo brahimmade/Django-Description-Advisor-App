@@ -63,7 +63,8 @@
                                 href="{% url 'dashboard:job-title-edit' pk=object.pk %}">Edit</a>
                             <!-- <a class="btn btn-secondary btn-xs" type="button"
                                 href="">Show</a> -->
-
+                            <a class="btn btn-success btn-xs" type="button"
+                                href="{% url 'dashboard:job-title-archive' pk=object.pk %}">Archive</a>
                             {% if not object.is_core %}
                             <a class="btn btn-danger btn-xs" type="button"
                                 href="{% url 'dashboard:job-title-delete' pk=object.pk %}">Delete</a>

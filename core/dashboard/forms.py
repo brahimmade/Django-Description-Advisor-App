@@ -14,7 +14,23 @@ class DescriptionForm(forms.ModelForm):
         
     def get_job_titles(self):
         if cache.get("job_titles_query") is None:
-            job_query = JobTitle.objects.all()
+            job_query = JobTitle.objects.filter(is_archived=False)
+            cache.set("job_titles_query",job_query,30)
+            print('set cache')
+        return cache.get("job_titles_query")
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ['job_title','name']    
+    
+    def __init__(self, *args, **kwargs):
+        super(DescriptionForm, self).__init__(*args, **kwargs)
+        self.fields['job_title'].queryset = self.get_job_titles()
+    
+    def get_job_titles(self):
+        if cache.get("job_titles_query") is None:
+            job_query = JobTitle.objects.filter(is_archived=False)
             cache.set("job_titles_query",job_query,30)
             print('set cache')
         return cache.get("job_titles_query")
