@@ -25,7 +25,7 @@ class SkillForm(forms.ModelForm):
         fields = ['job_title','name']    
     
     def __init__(self, *args, **kwargs):
-        super(DescriptionForm, self).__init__(*args, **kwargs)
+        super(SkillForm, self).__init__(*args, **kwargs)
         self.fields['job_title'].queryset = self.get_job_titles()
     
     def get_job_titles(self):
