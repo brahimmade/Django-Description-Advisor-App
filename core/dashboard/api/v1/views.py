@@ -33,8 +33,10 @@ class SkillDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Skill.objects.all()
 
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs) if request.user.is_superuser else Response(
-            {"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        object = self.get_object()
+        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+            return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
         
 
 class SkillArchiveView(generics.GenericAPIView):
@@ -97,8 +99,10 @@ class JobTitleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobTitle.objects.all()
 
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs) if request.user.is_superuser else Response(
-            {"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        object = self.get_object()
+        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+            return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
 
 class JobTitleArchiveView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
@@ -108,10 +112,10 @@ class JobTitleArchiveView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        description_obj = serializer.validated_data['description_obj']
-        description_obj.is_archived = True
-        description_obj.save()
-        return Response({"detail": f"description obj {description_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
+        job_title_obj = serializer.validated_data['job_title_obj']
+        job_title_obj.is_archived = True
+        job_title_obj.save()
+        return Response({"detail": f"job title obj {job_title_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
     
 
 class JobTitleMarkView(generics.GenericAPIView):
@@ -152,8 +156,10 @@ class DescriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Description.objects.all()
 
     def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs) if request.user.is_superuser else Response(
-            {"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        object = self.get_object()
+        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+            return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
         
         
 class DescriptionArchiveView(generics.GenericAPIView):

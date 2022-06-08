@@ -18,80 +18,383 @@
                     </h1>
                     <div class="page-header-subtitle">List of all Job Title</div>
                 </div>
+                <div class="col-12 col-xl-auto mt-4">
+                    <div class="input-group input-group-joined border-0" style="width: 16.5rem">
+                        <button class="btn btn-white" data-bs-toggle="modal" data-bs-target="#createModal">Add
+                            Job Title</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </header>
 <div class="container-xl px-4  mt-n10">
     <div class="card">
-        <div class="card-header">Job Title Table</div>
+        <div class="card-header">Descriptions Table</div>
+
         <div class="card-body">
-            <table id="datatablesSimple">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Id</th>
-                        <th>name</th>
-                        <th>isCore</th>
-                        <th>Created Date</th>
-                        <th>Updated Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Id</th>
-                        <th>Text</th>
-                        <th>isCore</th>
-                        <th>Created Date</th>
-                        <th>Updated Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    {% for object in object_list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ object.id }}</td>
-                        <td>{{ object.name }}</td>
-                        <td>{{ object.is_core }}</td>
-                        <td>{{ object.updated_date }}</td>
-                        <td>{{ object.created_date }}</td>
-                        <td>
-                            <a class="btn btn-primary btn-xs" type="button"
-                                href="{% url 'dashboard:job-title-edit' pk=object.pk %}">Edit</a>
-                            <!-- <a class="btn btn-secondary btn-xs" type="button"
-                                href="">Show</a> -->
-                            <a class="btn btn-success btn-xs" type="button"
-                                href="{% url 'dashboard:job-title-archive' pk=object.pk %}">Archive</a>
-                            {% if not object.is_core %}
-                            <a class="btn btn-danger btn-xs" type="button"
-                                href="{% url 'dashboard:job-title-delete' pk=object.pk %}">Delete</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                <div class="dataTable-top">
+                    <div class="dataTable-dropdown"><label>
+                            <select class="dataTable-selector" id="page-size-num">
+                                <option value="5">5</option>
+                                <option value="10" selected="">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            entries per page</label></div>
+                    <div class="dataTable-search">
+                        <div class="input-group input-group-joined">
+                            <input class="form-control pe-0" type="text" placeholder="Input text search"
+                                aria-label="Search" id="search-filter-input">
+                            <span class="input-group-text">
+                                <i data-feather="search"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="dataTable-container">
+                    <table class="dataTable-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 4.08372%;">#</th>
+                                <th style="width: 4.08372%;">Id</th>
+                                <th style="width: 40.2795%;">Name</th>
+                                <th style="width: 6.08845%;">isCore</th>                                
+                                <th style="width: 8.68718%;">Created Date</th>
+                                <th style="width: 9.28117%;">Updated Date</th>
+                                <th style="width: 7.49919%;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="table-item-wrapper">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dataTable-bottom">
+                    <div class="dataTable-info">Total entries <span id="total-items"></span></div>
+                    <nav class="dataTable-pagination">
+                        <ul class="dataTable-pagination-list">
+
+                            <li class=""><a id="prev-page-btn" href="#">Prev Page</a></li>
+                            <li class=""><a id="next-page-btn" href="#">Next Page</a></li>
+                            <!-- <li class="active"><a href="#">1</a></li>
+                            <li class=""><a href="#">2</a></li>
+                            <li class=""><a href="#">3</a></li>
+                            <li class=""><a href="#">4</a></li>
+                            <li class=""><a href="#">5</a></li>
+                            <li class=""><a href="#">6</a></li>
+                            <li class=""><a href="#">7</a></li>
+                            <li class="ellipsis"><a href="#">…</a></li>
+                            <li class=""><a href="#" data-page="167">167</a></li>
+                            <li class="pager"><a href="#" data-page="2">›</a></li> -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Job Title Create</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="job-title-create-form">
+                <div class="modal-body">
+
+                    <div class="mb-3"><label for="description-text">Job Title Name </label>
+                        <input  name="name"></input>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Job Title Edit</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="job-title-edit-form">
+                <div class="modal-body">
+
+                    <div class="mb-3"><label for="job-title-input">Job Title </label>
+                        <input id="job-title-input-edit"  name="name"></input>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', event => {
-        // Simple-DataTables
-        // https://github.com/fiduswriter/Simple-DataTables/wiki
 
-        const datatablesSimple = document.getElementById('datatablesSimple');
-        if (datatablesSimple) {
-            new simpleDatatables.DataTable(datatablesSimple);
+
+
+<script>
+    var host_url = location.protocol + '//' + location.host
+    var main_url = new URL(host_url + "/dashboard/api/v1/job-title/")
+    var page_number = null;
+    var next_page_url = null;
+    var prev_page_url = null;
+    var general_id;
+
+    function get_job_titles(item) {
+        let job_items_list = ''
+        for (let job_item of item.job_title) {
+
+            job_items_list += `<span style="margin:0 10px 0 0" class="badge bg-primary">${job_item.name}</span>`
+        }
+        return job_items_list
+    }
+
+    function fetchData(url) {
+        let wrapper = $('#table-item-wrapper')
+
+        $.get(url,  // url
+            function (data, textStatus, jqXHR) {
+                $('#total-items').text(data.total_items)
+                next_page_url = data.links.next;
+                prev_page_url = data.links.previous;
+                results_data = data.results
+                wrapper.empty()
+                results_data.forEach(function (item, i) {
+                    // for (post of data.results) {
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
+                            <td>${i += 1}</td>
+                            <td>${item.id}</td>
+                            <td>${item.name}</td>
+                            <td>${item.is_core}</td>
+                            <td>${item.created_date}</td>
+                            <td>${item.updated_date}</td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" type="button" onclick="openEditModal(${item.id})" >Edit</button>
+                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">Archive</button>
+                                <button class="btn btn-danger btn-xs" type="button" onclick="removeItem(${item.id})">Delete</button>
+                                <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${(item.is_marked) ? "UnMark" : "Mark"}</button>
+                            </td>
+                        </tr>`)
+                }
+
+
+                )
+            })
+
+    }
+
+
+    function removeItem(id) {
+        if (confirm(`Are you sure you want to remove this ${id} id?`)) {
+            $.ajax({
+                // contentType: "multipart/form-data",
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                type: 'DELETE',
+                processData: false,
+                contentType: false,
+                url: `/dashboard/api/v1/job-title/${id}/`,
+                success: function (data) {
+                    fetchData(main_url)
+                },
+                failure: function (response) {
+                    alert(response)
+                },
+                error: function (xhr, status, error) {
+                    alert(error);
+                }
+
+            });
+        } else {
+
+        }
+    }
+
+    function archiveItem(id) {
+        if (confirm(`Are you sure you want to archive this ${id} id?`)) {
+            formData = new FormData();
+            formData.append('job_title_id', id)
+            url = `/dashboard/api/v1/job-title/archive/`
+            $.ajax({
+                // contentType: "multipart/form-data",
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: url,
+                success: function (data) {
+                    fetchData(main_url)
+                },
+                failure: function (response) {
+                    alert(response)
+                }
+
+            });
+        } else {
+
+        }
+    }
+
+    function openEditModal(id) {
+        $("#editModal").modal('show');
+        general_id = id
+        modal = document.getElementById("editModal")
+        let result_data
+        $.get(`/dashboard/api/v1/job-title/${id}`, { async: false },
+            function (data, textStatus, jqXHR) {
+                result_data = data
+                console.log(result_data)
+
+            }).then(function () {
+                $('#job-title-input-edit').val(result_data.name)
+
+            })
+    }
+
+    function markItem(id) {
+        formData = new FormData();
+        formData.append('job_title_id', id)
+        url = `/dashboard/api/v1/job-title/mark/`
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            url: url,
+            success: function (data) {
+                fetchData(main_url)
+            },
+            failure: function (response) {
+                alert(response)
+            }
+
+        });
+
+    }
+
+    window.addEventListener('DOMContentLoaded', event => {
+        url = main_url
+        fetchData(url)
+        // fetchJobTitles()
+    });
+
+
+    $("#next-page-btn").click(function (e) {
+        e.preventDefault()
+        if (next_page_url !== null) {
+            fetchData(next_page_url)
         }
     });
+
+    $("#prev-page-btn").click(function (e) {
+        e.preventDefault()
+        if (prev_page_url !== null) {
+            fetchData(prev_page_url)
+        }
+    });
+
+    $("#page-size-num").change(function (e) {
+
+        main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
+
+    $("#search-filter-input").on('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            main_url.searchParams.set('search', $(this).val())
+            fetchData(main_url)
+        }
+    });
+
+    $("#job-title-create-form").submit(function (e) {
+        e.preventDefault()
+
+        formData = new FormData();
+        formData.append('name', this.name.value)
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: "/dashboard/api/v1/job-title/",
+            success: function (data) {
+                fetchData(main_url)
+                $("#createModal").modal('hide');
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+    });
+
+
+    $("#job-title-edit-form").submit(function (e) {
+        e.preventDefault()
+        // console.log(this.job_title.value)
+        // console.log('sent')
+        formData = new FormData();
+        formData.append('name', this.name.value)
+        let id = general_id
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'PUT',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: `/dashboard/api/v1/job-title/${id}/`,
+            success: function (data) {
+                fetchData(main_url)
+                $("#editModal").modal('hide');
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+    });
+    
 
 </script>
 {% endblock %}

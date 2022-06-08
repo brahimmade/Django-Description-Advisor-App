@@ -182,9 +182,6 @@
 <script src="{% static 'virtual-select/dist/virtual-select.min.js' %}"></script>
 <script>
 
-</script>
-<script>
-
     tinymce.init({
         height: 200,
         menubar: false,
@@ -227,7 +224,7 @@
                 wrapper.empty()
                 results_data.forEach(function (item, i) {
                     // for (post of data.results) {
-                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#cbf5da" : ""}'>
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
                             <td>${i += 1}</td>
                             <td>${item.id}</td>
                             <td>${item.text}</td>

@@ -6,10 +6,18 @@ from django.shortcuts import get_object_or_404
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ["id", "name",'job_title','is_marked','is_archived']
+        fields = ["id", "name",'job_title','is_core','is_marked','is_archived']
         read_only_fields = ['is_marked','is_archived']
+    
     def validate(self, attrs):
         return super().validate(attrs)
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
+        rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
+        rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
+        return rep 
     
 class SkillArchiveSerializer(serializers.Serializer):
     skill_id = serializers.IntegerField(required=True)
@@ -33,11 +41,20 @@ class SkillMarkSerializer(serializers.Serializer):
 class JobTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobTitle
-        fields = ["id", "name",'is_core','is_marked','is_archived']
+        fields = ["id", "name",'is_core','is_marked','is_archived','created_date','updated_date']
         read_only_fields = ['is_marked','is_archived']
         
-    def validate(self, attrs):
-        return super().validate(attrs)
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        
+        rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
+        rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
+        return rep
+    
+    def create(self, validated_data):
+        validated_data['is_core'] = False
+        return super().create(validated_data)
+    
 
 
 
