@@ -120,7 +120,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3"><label for="description-text">Description Text </label>
-                        <textarea id="description-text" name="text"></textarea>
+                        <textarea class="tiny-mce-editor" name="text"></textarea>
                     </div>
                     <div class="mb-3" style="width: 100%;">
                         <label for="job-title-list-selection">Job Titles </label>
@@ -141,7 +141,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -150,13 +149,27 @@
                 <h5 class="modal-title">Description Edit</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="description-edit">
+            <form id="description-edit-form">
+                <div class="modal-body">
 
-                </form>
-            </div>
-            <div class="modal-footer"><button class="btn btn-primary" type="button"
-                    data-bs-dismiss="modal">Close</button></div>
+                    <div class="mb-3"><label for="description-text">Description Text </label>
+                        <textarea id="description-text-edit" class="tiny-mce-editor" name="text"></textarea>
+                    </div>
+                    <div class="mb-3" style="width: 100%;">
+                        <label for="job-title-list-selection-edit">Job Titles </label>
+                        <div id="job-title-list-selection-edit" style="min-width: 100%;" name="job_title">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -168,15 +181,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@1/dist/tinymce-jquery.min.js"></script>
 <script src="{% static 'virtual-select/dist/virtual-select.min.js' %}"></script>
 <script>
-    window.addEventListener('DOMContentLoaded', event => {
-        fetchJobTitles()
-    })
+
 </script>
 <script>
 
-    $('#description-text').tinymce({
+    tinymce.init({
         height: 200,
         menubar: false,
+        selector: '.tiny-mce-editor',
         plugins: [
             'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
             'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
@@ -191,6 +203,9 @@
     var page_number = null;
     var next_page_url = null;
     var prev_page_url = null;
+    var general_id;
+    var job_title_options = new Array();
+    var preselected
     function get_job_titles(item) {
         let job_items_list = ''
         for (let job_item of item.job_title) {
@@ -199,6 +214,7 @@
         }
         return job_items_list
     }
+
     function fetchData(url) {
         let wrapper = $('#table-item-wrapper')
 
@@ -211,7 +227,7 @@
                 wrapper.empty()
                 results_data.forEach(function (item, i) {
                     // for (post of data.results) {
-                    wrapper.append(`<tr id='table-item-${item.id}' style='${ (item.is_marked)? "background-color:#cbf5da":""}'>
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#cbf5da" : ""}'>
                             <td>${i += 1}</td>
                             <td>${item.id}</td>
                             <td>${item.text}</td>
@@ -222,12 +238,10 @@
                             <td>${item.created_date}</td>
                             <td>${item.updated_date}</td>
                             <td>
-                                <a class="btn btn-primary btn-xs" type="button"
-                                data-bs-toggle="modal" data-bs-target="#createModal" >Edit</a>
-                                
+                                <button class="btn btn-primary btn-xs" type="button" onclick="openEditModal(${item.id})" >Edit</button>
                                 <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">Archive</button>
                                 <button class="btn btn-danger btn-xs" type="button" onclick="removeItem(${item.id})">Delete</button>
-                                <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${ (item.is_marked)? "UnMark":"Mark"}</button>
+                                <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${(item.is_marked) ? "UnMark" : "Mark"}</button>
                             </td>
                         </tr>`)
                 }
@@ -238,42 +252,31 @@
 
     }
 
-    function fetchJobTitles() {
-        let options = new Array();
+    function fetchJobTitles(selected) {
+        // $('#job-title-list-selection-edit').empty();
+        try{
+            preselected.destroy()
+        }
+        catch{
 
-
-        $.get('/dashboard/api/v1/job-title/all/', { async: true },
-            function (data, textStatus, jqXHR) {
-
-                results_data = data
-                results_data.forEach(function (item, i) {
-                    let myObj = {
-                        "label": item.name,
-                        "value": item.id
-                    };
-                    options.push(myObj);
-
-                })
-            }).then(function () {
-                VirtualSelect.init({
-                    ele: '#job-title-list-selection',
-                    options: options,
-                    multiple: true,
-                    search: true,
-                    showSelectedOptionsFirst: true,
-                });
-
-            })
-        // options =  [
-        //     { label: 'Colors', value: 'colors', alias: 'Orange, Red' },
-        //     { label: 'Fruits', value: 'fruits', alias: ['Orange', 'Apple'] },
-        //     { label: 'Months', value: 'months', alias: 'January' },
-        //     { label: 'Others', value: 'others' }
-        // ]
-        console.log(options)
-        return options
-
+        }
+        preselected = VirtualSelect.init({
+            ele: '#job-title-list-selection-edit',
+            options: job_title_options,
+            selectedValue: selected,
+            multiple: true,
+            search: true,
+            showSelectedOptionsFirst: true,
+            markSearchResults: true,
+        });
+        
+    
     }
+
+
+
+
+
 
     function removeItem(id) {
         if (confirm(`Are you sure you want to remove this ${id} id?`)) {
@@ -328,6 +331,37 @@
         } else {
 
         }
+    }
+
+    function openEditModal(id) {
+        $("#editModal").modal('show');
+        general_id = id
+        modal = document.getElementById("editModal")
+        let result_data
+        $.get(`/dashboard/api/v1/description/${id}`, { async: false },
+            function (data, textStatus, jqXHR) {
+                result_data = data
+                // console.log(result_data.text)
+
+            }).then(function () {
+                tinymce.get("description-text-edit").setContent(result_data.text);
+                let job_title_list = (result_data.job_title).map(obj => { return obj.id })
+                // console.log(job_title_list)
+                fetchJobTitles(job_title_list)
+                // for (let selected_item of result_data.job_title) {
+                //     $(`$"#editModal #job-title-list-selection option[value='${selected_item.id}']`).prop('selected', true);
+                // }
+                // tinymce.activeEditor.setContent(result_data.text);
+                // VirtualSelect.init({
+                //     ele: '#job-title-list-selection',
+                //     options: options,
+                //     multiple: true,
+                //     search: true,
+                //     showSelectedOptionsFirst: true,
+                // });
+                // console.log('then')
+
+            })
     }
 
     function markItem(id) {
@@ -422,6 +456,63 @@
         });
     });
 
+
+    $("#description-edit-form").submit(function (e) {
+        e.preventDefault()
+        // console.log(this.job_title.value)
+        // console.log('sent')
+        job_titles = this.job_title.value.split(",");
+        formData = new FormData();
+        formData.append('text', this.text.value)
+        for (let job_index of job_titles) {
+            // console.log(job_index)
+            formData.append('job_title', parseInt(job_index))
+        }
+        let id = general_id
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'PUT',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: `/dashboard/api/v1/description/${id}/`,
+            success: function (data) {
+                fetchData(main_url)
+                $("#editModal").modal('hide');
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+    });
+    window.addEventListener('DOMContentLoaded', event => {
+        $.get('/dashboard/api/v1/job-title/all/', { async: true },
+            function (data, textStatus, jqXHR) {
+
+                results_data = data
+                results_data.forEach(function (item, i) {
+                    let myObj = {
+                        "label": item.name,
+                        "value": item.id,
+                    };
+                    job_title_options.push(myObj);
+
+                })
+            }).then(function () {
+                VirtualSelect.init({
+                    ele: '#job-title-list-selection',
+                    options: job_title_options,
+                    multiple: true,
+                    search: true,
+                    showSelectedOptionsFirst: true,
+                    markSearchResults: true,
+                });
+
+            })
+    })
 
 </script>
 {% endblock %}
