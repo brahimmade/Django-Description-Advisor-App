@@ -18,6 +18,17 @@ class DashboardIndex(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/index.html'
 
 
+class DescriptionView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard/description_mgmt.html'
+
+
+class SkillView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard/skill_mgmt.html'
+
+class JobTitleView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard/job_title_mgmt.html'
+
+
 @method_decorator(cache_page(30), name='dispatch')
 class SkillListView(ListView):
     queryset = Skill.objects.filter(is_archived=False)
