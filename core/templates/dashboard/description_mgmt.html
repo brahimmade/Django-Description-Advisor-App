@@ -1,0 +1,515 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}Dashboard | Description List {% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+<link href="{% static 'virtual-select/dist/virtual-select.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg></div>
+                        Description Management
+                    </h1>
+                    <div class="page-header-subtitle">Manage your Descriptions from here</div>
+                </div>
+                <div class="col-12 col-xl-auto mt-4">
+                    <div class="input-group input-group-joined border-0" style="width: 16.5rem">
+                        <button class="btn btn-white" data-bs-toggle="modal" data-bs-target="#createModal">Add
+                            Description</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container-xl px-4  mt-n10">
+    <div class="card">
+        <div class="card-header">Descriptions Table</div>
+
+        <div class="card-body">
+            <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                <div class="dataTable-top">
+                    <div class="dataTable-dropdown"><label>
+                            <select class="dataTable-selector" id="page-size-num">
+                                <option value="5">5</option>
+                                <option value="10" selected="">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            entries per page</label></div>
+                    <div class="dataTable-search">
+                        <div class="input-group input-group-joined">
+                            <input class="form-control pe-0" type="text" placeholder="Input text search"
+                                aria-label="Search" id="search-filter-input">
+                            <span class="input-group-text">
+                                <i data-feather="search"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="dataTable-container">
+                    <table class="dataTable-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 4.08372%;">#</th>
+                                <th style="width: 4.08372%;">Id</th>
+                                <th style="width: 40.2795%;">Text</th>
+                                <th style="width: 6.08845%;">isCore</th>
+                                <th style="width: 20.3822%;">JobTitles</th>
+                                <th style="width: 8.68718%;">Created Date</th>
+                                <th style="width: 9.28117%;">Updated Date</th>
+                                <th style="width: 7.49919%;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="table-item-wrapper">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dataTable-bottom">
+                    <div class="dataTable-info">Total entries <span id="total-items"></span></div>
+                    <nav class="dataTable-pagination">
+                        <ul class="dataTable-pagination-list">
+
+                            <li class=""><a id="prev-page-btn" href="#">Prev Page</a></li>
+                            <li class=""><a id="next-page-btn" href="#">Next Page</a></li>
+                            <!-- <li class="active"><a href="#">1</a></li>
+                            <li class=""><a href="#">2</a></li>
+                            <li class=""><a href="#">3</a></li>
+                            <li class=""><a href="#">4</a></li>
+                            <li class=""><a href="#">5</a></li>
+                            <li class=""><a href="#">6</a></li>
+                            <li class=""><a href="#">7</a></li>
+                            <li class="ellipsis"><a href="#">…</a></li>
+                            <li class=""><a href="#" data-page="167">167</a></li>
+                            <li class="pager"><a href="#" data-page="2">›</a></li> -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Description Create</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="description-create-form">
+                <div class="modal-body">
+
+                    <div class="mb-3"><label for="description-text">Description Text </label>
+                        <textarea class="tiny-mce-editor" name="text"></textarea>
+                    </div>
+                    <div class="mb-3" style="width: 100%;">
+                        <label for="job-title-list-selection">Job Titles </label>
+                        <div id="job-title-list-selection" style="min-width: 100%;" name="job_title">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Description Edit</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="description-edit-form">
+                <div class="modal-body">
+
+                    <div class="mb-3"><label for="description-text">Description Text </label>
+                        <textarea id="description-text-edit" class="tiny-mce-editor" name="text"></textarea>
+                    </div>
+                    <div class="mb-3" style="width: 100%;">
+                        <label for="job-title-list-selection-edit">Job Titles </label>
+                        <div id="job-title-list-selection-edit" style="min-width: 100%;" name="job_title">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@1/dist/tinymce-jquery.min.js"></script>
+<script src="{% static 'virtual-select/dist/virtual-select.min.js' %}"></script>
+<script>
+
+    tinymce.init({
+        height: 200,
+        menubar: false,
+        selector: '.tiny-mce-editor',
+        plugins: [
+            'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+            'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+            'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist checklist outdent indent | removeformat | code table help'
+    });
+</script>
+<script>
+    var host_url = location.protocol + '//' + location.host
+    var main_url = new URL(host_url + "/dashboard/api/v1/description/")
+    var page_number = null;
+    var next_page_url = null;
+    var prev_page_url = null;
+    var general_id;
+    var job_title_options = new Array();
+    var preselected
+    function get_job_titles(item) {
+        let job_items_list = ''
+        for (let job_item of item.job_title) {
+
+            job_items_list += `<span style="margin:0 10px 0 0" class="badge bg-primary">${job_item.name}</span>`
+        }
+        return job_items_list
+    }
+
+    function fetchData(url) {
+        let wrapper = $('#table-item-wrapper')
+
+        $.get(url,  // url
+            function (data, textStatus, jqXHR) {
+                $('#total-items').text(data.total_items)
+                next_page_url = data.links.next;
+                prev_page_url = data.links.previous;
+                results_data = data.results
+                wrapper.empty()
+                results_data.forEach(function (item, i) {
+                    // for (post of data.results) {
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
+                            <td>${i += 1}</td>
+                            <td>${item.id}</td>
+                            <td>${item.text}</td>
+                            <td>${item.is_core}</td>
+                            <td>
+                                ${get_job_titles(item)}  
+                            </td>
+                            <td>${item.created_date}</td>
+                            <td>${item.updated_date}</td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" type="button" onclick="openEditModal(${item.id})" >Edit</button>
+                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">Archive</button>
+                                <button class="btn btn-danger btn-xs" type="button" onclick="removeItem(${item.id})">Delete</button>
+                                <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${(item.is_marked) ? "UnMark" : "Mark"}</button>
+                            </td>
+                        </tr>`)
+                }
+
+
+                )
+            })
+
+    }
+
+    function fetchJobTitles(selected) {
+        // $('#job-title-list-selection-edit').empty();
+        try{
+            preselected.destroy()
+        }
+        catch{
+
+        }
+        preselected = VirtualSelect.init({
+            ele: '#job-title-list-selection-edit',
+            options: job_title_options,
+            selectedValue: selected,
+            multiple: true,
+            search: true,
+            showSelectedOptionsFirst: true,
+            markSearchResults: true,
+        });
+        
+    
+    }
+
+
+
+
+
+
+    function removeItem(id) {
+        if (confirm(`Are you sure you want to remove this ${id} id?`)) {
+            $.ajax({
+                // contentType: "multipart/form-data",
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                type: 'DELETE',
+                processData: false,
+                contentType: false,
+                url: `/dashboard/api/v1/description/${id}/`,
+                success: function (data) {
+                    fetchData(main_url)
+                },
+                failure: function (response) {
+                    alert(response)
+                },
+                error: function (xhr, status, error) {
+                    alert(error);
+                }
+
+            });
+        } else {
+
+        }
+    }
+
+    function archiveItem(id) {
+        if (confirm(`Are you sure you want to archive this ${id} id?`)) {
+            formData = new FormData();
+            formData.append('description_id', id)
+            url = `/dashboard/api/v1/description/archive/`
+            $.ajax({
+                // contentType: "multipart/form-data",
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: url,
+                success: function (data) {
+                    fetchData(main_url)
+                },
+                failure: function (response) {
+                    alert(response)
+                }
+
+            });
+        } else {
+
+        }
+    }
+
+    function openEditModal(id) {
+        $("#editModal").modal('show');
+        general_id = id
+        modal = document.getElementById("editModal")
+        let result_data
+        $.get(`/dashboard/api/v1/description/${id}`, { async: false },
+            function (data, textStatus, jqXHR) {
+                result_data = data
+                // console.log(result_data.text)
+
+            }).then(function () {
+                tinymce.get("description-text-edit").setContent(result_data.text);
+                let job_title_list = (result_data.job_title).map(obj => { return obj.id })
+                // console.log(job_title_list)
+                fetchJobTitles(job_title_list)
+                // for (let selected_item of result_data.job_title) {
+                //     $(`$"#editModal #job-title-list-selection option[value='${selected_item.id}']`).prop('selected', true);
+                // }
+                // tinymce.activeEditor.setContent(result_data.text);
+                // VirtualSelect.init({
+                //     ele: '#job-title-list-selection',
+                //     options: options,
+                //     multiple: true,
+                //     search: true,
+                //     showSelectedOptionsFirst: true,
+                // });
+                // console.log('then')
+
+            })
+    }
+
+    function markItem(id) {
+        formData = new FormData();
+        formData.append('description_id', id)
+        url = `/dashboard/api/v1/description/mark/`
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            url: url,
+            success: function (data) {
+                fetchData(main_url)
+            },
+            failure: function (response) {
+                alert(response)
+            }
+
+        });
+
+    }
+
+    window.addEventListener('DOMContentLoaded', event => {
+        url = main_url
+        fetchData(url)
+        // fetchJobTitles()
+    });
+
+
+    $("#next-page-btn").click(function (e) {
+        e.preventDefault()
+        if (next_page_url !== null) {
+            fetchData(next_page_url)
+        }
+    });
+
+    $("#prev-page-btn").click(function (e) {
+        e.preventDefault()
+        if (prev_page_url !== null) {
+            fetchData(prev_page_url)
+        }
+    });
+
+    $("#page-size-num").change(function (e) {
+
+        main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
+
+    $("#search-filter-input").on('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            main_url.searchParams.set('search', $(this).val())
+            fetchData(main_url)
+        }
+    });
+
+    $("#description-create-form").submit(function (e) {
+        e.preventDefault()
+        // console.log(this.job_title.value)
+        // console.log('sent')
+        job_titles = this.job_title.value.split(",");
+        formData = new FormData();
+        formData.append('text', this.text.value)
+        for (let job_index of job_titles) {
+            // console.log(job_index)
+            formData.append('job_title', parseInt(job_index))
+        }
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: "/dashboard/api/v1/description/",
+            success: function (data) {
+                fetchData(main_url)
+                $("#createModal").modal('hide');
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+    });
+
+
+    $("#description-edit-form").submit(function (e) {
+        e.preventDefault()
+        // console.log(this.job_title.value)
+        // console.log('sent')
+        job_titles = this.job_title.value.split(",");
+        formData = new FormData();
+        formData.append('text', this.text.value)
+        for (let job_index of job_titles) {
+            // console.log(job_index)
+            formData.append('job_title', parseInt(job_index))
+        }
+        let id = general_id
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'PUT',
+            processData: false,
+            contentType: false,
+            data: formData,
+            url: `/dashboard/api/v1/description/${id}/`,
+            success: function (data) {
+                fetchData(main_url)
+                $("#editModal").modal('hide');
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+    });
+    window.addEventListener('DOMContentLoaded', event => {
+        $.get('/dashboard/api/v1/job-title/all/', { async: true },
+            function (data, textStatus, jqXHR) {
+
+                results_data = data
+                results_data.forEach(function (item, i) {
+                    let myObj = {
+                        "label": item.name,
+                        "value": item.id,
+                    };
+                    job_title_options.push(myObj);
+
+                })
+            }).then(function () {
+                VirtualSelect.init({
+                    ele: '#job-title-list-selection',
+                    options: job_title_options,
+                    multiple: true,
+                    search: true,
+                    showSelectedOptionsFirst: true,
+                    markSearchResults: true,
+                });
+
+            })
+    })
+
+</script>
+{% endblock %}
