@@ -35,7 +35,8 @@
         <div class="card-body">
             <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                 <div class="dataTable-top">
-                    <div class="dataTable-dropdown"><label>
+                    <div class="dataTable-dropdown">
+                        <label>entries per page
                             <select class="dataTable-selector" id="page-size-num">
                                 <option value="5">5</option>
                                 <option value="10" selected="">10</option>
@@ -45,7 +46,20 @@
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>
-                            entries per page</label></div>
+                        </label>
+                        <label>Ordering filters
+                            <select class="dataTable-selector" id="ordering-filter">
+                                <option value="" selected="">None</option>
+                                <option value="name">A-Z</option>
+                                <option value="-name">Z-A</option>
+                                <option value="created_date">Ascending Date</option>
+                                <option value="-created_date">Descending Date</option>
+                                <option value="id">Ascending ID</option>
+                                <option value="-id">Descending ID</option>
+                            </select>
+                        </label>
+                    </div>
+                    
                     <div class="dataTable-search">
                         <div class="input-group input-group-joined">
                             <input class="form-control pe-0" type="text" placeholder="Input text search"
@@ -64,7 +78,7 @@
                                 <th style="width: 4.08372%;">#</th>
                                 <th style="width: 4.08372%;">Id</th>
                                 <th style="width: 40.2795%;">Name</th>
-                                <th style="width: 6.08845%;">isCore</th>                                
+                                <th style="width: 6.08845%;">isCore</th>
                                 <th style="width: 8.68718%;">Created Date</th>
                                 <th style="width: 9.28117%;">Updated Date</th>
                                 <th style="width: 7.49919%;">Actions</th>
@@ -114,7 +128,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3"><label for="description-text">Job Title Name </label>
-                        <input  name="name" class="form-control"></input>
+                        <input name="name" class="form-control"></input>
                     </div>
                 </div>
 
@@ -139,7 +153,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3"><label for="job-title-input">Job Title </label>
-                        <input id="job-title-input-edit"  class="form-control" name="name"></input>
+                        <input id="job-title-input-edit" class="form-control" name="name"></input>
                     </div>
 
                 </div>
@@ -329,12 +343,27 @@
 
     $("#page-size-num").change(function (e) {
 
-        main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        main_url.searchParams.set('page_size', $(this).find(":selected").val());
         fetchData(main_url)
         // url.searchParams.append('x', 42);
 
     });
 
+    $("#page-size-num").change(function (e) {
+
+        main_url.searchParams.set('page_size', $(this).find(":selected").val());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
+
+    $("#ordering-filter").change(function (e) {
+
+        main_url.searchParams.set('ordering', $(this).find(":selected").val());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
     $("#search-filter-input").on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             main_url.searchParams.set('search', $(this).val())
@@ -394,7 +423,7 @@
             }
         });
     });
-    
+
 
 </script>
 {% endblock %}

@@ -21,8 +21,8 @@ class SkillListCreateView(generics.ListCreateAPIView):
     queryset = Skill.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {'job_title': ["exact"]}
-    search_fields = ["name"]
-    ordering_fields = ["created_date", 'name']
+    search_fields = ["name",'id']
+    ordering_fields = ["created_date", 'name','id']
     pagination_class = DefaultPagination
 
 
@@ -81,8 +81,8 @@ class JobTitleListCreateView(generics.ListCreateAPIView):
     queryset = JobTitle.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {}
-    search_fields = ["name"]
-    ordering_fields = ["created_date", 'name']
+    search_fields = ["name",'id']
+    ordering_fields = ["created_date", 'name','id']
     pagination_class = DefaultPagination
 
 class JobTitleAllView(generics.ListCreateAPIView):
@@ -144,8 +144,8 @@ class DescriptionListCreateView(generics.ListCreateAPIView):
     queryset = Description.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {}
-    search_fields = ["text"]
-    ordering_fields = ["created_date"]
+    search_fields = ["text",'id']
+    ordering_fields = ["created_date",'id']
     pagination_class = DefaultPagination
 
 

@@ -35,7 +35,8 @@
         <div class="card-body">
             <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                 <div class="dataTable-top">
-                    <div class="dataTable-dropdown"><label>
+                    <div class="dataTable-dropdown">
+                        <label>entries per page
                             <select class="dataTable-selector" id="page-size-num">
                                 <option value="5">5</option>
                                 <option value="10" selected="">10</option>
@@ -45,7 +46,19 @@
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>
-                            entries per page</label></div>
+                        </label>
+                        <label>Ordering filters
+                            <select class="dataTable-selector" id="ordering-filter">
+                                <option value="" selected="">None</option>
+                                <option value="name">A-Z</option>
+                                <option value="-name">Z-A</option>
+                                <option value="created_date">Ascending Date</option>
+                                <option value="-created_date">Descending Date</option>
+                                <option value="id">Ascending ID</option>
+                                <option value="-id">Descending ID</option>
+                            </select>
+                        </label>
+                    </div>
                     <div class="dataTable-search">
                         <div class="input-group input-group-joined">
                             <input class="form-control pe-0" type="text" placeholder="Input text search"
@@ -232,10 +245,10 @@
 
     function fetchJobTitles(selected) {
         // $('#job-title-list-selection-edit').empty();
-        try{
+        try {
             preselected.destroy()
         }
-        catch{
+        catch {
 
         }
         preselected = VirtualSelect.init({
@@ -247,8 +260,8 @@
             showSelectedOptionsFirst: true,
             markSearchResults: true,
         });
-        
-    
+
+
     }
 
 
@@ -380,6 +393,13 @@
     $("#page-size-num").change(function (e) {
 
         main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
+    $("#ordering-filter").change(function (e) {
+
+        main_url.searchParams.set('ordering', $(this).find(":selected").val());
         fetchData(main_url)
         // url.searchParams.append('x', 42);
 
