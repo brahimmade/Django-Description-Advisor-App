@@ -411,7 +411,7 @@
     });
 
 
-    $("#alphabetic-filter").change(function (e) {
+    $("#page-size-num").change(function (e) {
 
         main_url.searchParams.set('page_size', $(this).find(":selected").text());
         fetchData(main_url)
