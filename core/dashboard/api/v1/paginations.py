@@ -1,6 +1,11 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from urllib.parse import urlparse
 
+def get_relative_path(url):
+    url = urlparse(url)
+    return f"{url.path}?{url.query}"
+    
 
 class DefaultPagination(PageNumberPagination):
     page_size = 20
@@ -10,9 +15,9 @@ class DefaultPagination(PageNumberPagination):
         return Response(
             {
                 "links": {
-                    "next": self.get_next_link(),
-                    "previous": self.get_previous_link(),
-                    "current": self.request.query_params.get("page", None),
+                    "next": get_relative_path(self.get_next_link()),
+                    "previous": get_relative_path(self.get_previous_link()),
+                    "current": self.request.query_params.get("page", 1),
                 },
                 "total_items": self.page.paginator.count,
                 "total_pages": self.page.paginator.num_pages,
