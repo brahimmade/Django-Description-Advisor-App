@@ -53,7 +53,7 @@
                             </select>
                         </label>
                     </div>
-                    
+
                     <div class="dataTable-search">
                         <div class="input-group input-group-joined">
                             <input class="form-control pe-0" type="text" placeholder="Input text search"
@@ -399,14 +399,23 @@
     $("#next-page-btn").click(function (e) {
         e.preventDefault()
         if (next_page_url !== null) {
-            fetchData(next_page_url)
+            main_url = new URL(host_url + next_page_url)
+            fetchData(main_url)
         }
+        else {
+            fetchData(main_url)
+        }
+
     });
 
     $("#prev-page-btn").click(function (e) {
         e.preventDefault()
         if (prev_page_url !== null) {
-            fetchData(prev_page_url)
+            main_url = new URL(host_url + prev_page_url)
+            fetchData(main_url)
+        }
+        else {
+            fetchData(main_url)
         }
     });
 

@@ -287,7 +287,7 @@
         $.get(`/dashboard/api/v1/job-title/${id}`, { async: false },
             function (data, textStatus, jqXHR) {
                 result_data = data
-                console.log(result_data)
+                // console.log(result_data)
 
             }).then(function () {
                 $('#job-title-input-edit').val(result_data.name)
@@ -310,6 +310,7 @@
             contentType: false,
             url: url,
             success: function (data) {
+                // console.log(main_url)
                 fetchData(main_url)
             },
             failure: function (response) {
@@ -330,14 +331,23 @@
     $("#next-page-btn").click(function (e) {
         e.preventDefault()
         if (next_page_url !== null) {
-            fetchData(next_page_url)
+            main_url = new URL(host_url + next_page_url)
+            fetchData(main_url)
         }
+        else{
+            fetchData(main_url)
+        }
+        
     });
 
     $("#prev-page-btn").click(function (e) {
         e.preventDefault()
         if (prev_page_url !== null) {
-            fetchData(prev_page_url)
+            main_url = new URL(host_url + prev_page_url)
+            fetchData(main_url)
+        }
+        else{
+            fetchData(main_url)
         }
     });
 
