@@ -91,7 +91,7 @@
                     </table>
                 </div>
                 <div class="dataTable-bottom">
-                    <div class="dataTable-info">Total entries <span id="total-items"></span></div>
+                    <div class="dataTable-info">Total entries <span id="total-items"></span> , Total marks <span id="total-marks"></span></div>
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
 
@@ -195,6 +195,7 @@
         $.get(url,  // url
             function (data, textStatus, jqXHR) {
                 $('#total-items').text(data.total_items)
+                $('#total-marks').text(data.total_marks)
                 next_page_url = data.links.next;
                 prev_page_url = data.links.previous;
                 results_data = data.results

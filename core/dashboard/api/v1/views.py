@@ -24,6 +24,11 @@ class SkillListCreateView(generics.ListCreateAPIView):
     search_fields = ["name",'id']
     ordering_fields = ["created_date", 'name','id']
     pagination_class = DefaultPagination
+    
+    def list(self, request, *args, **kwargs):  
+        response = super().list(request, *args, **kwargs)
+        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        return response
 
 
 class SkillDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -84,6 +89,11 @@ class JobTitleListCreateView(generics.ListCreateAPIView):
     search_fields = ["name",'id']
     ordering_fields = ["created_date", 'name','id']
     pagination_class = DefaultPagination
+    
+    def list(self, request, *args, **kwargs):  
+        response = super().list(request, *args, **kwargs)
+        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        return response
 
 class JobTitleAllView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -147,6 +157,11 @@ class DescriptionListCreateView(generics.ListCreateAPIView):
     search_fields = ["text",'id']
     ordering_fields = ["created_date",'id']
     pagination_class = DefaultPagination
+    
+    def list(self, request, *args, **kwargs):  
+        response = super().list(request, *args, **kwargs)
+        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        return response
 
 
 class DescriptionDetailView(generics.RetrieveUpdateDestroyAPIView):

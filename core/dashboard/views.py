@@ -20,7 +20,7 @@ class DashboardIndex(LoginRequiredMixin, TemplateView):
 
 class DescriptionView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/description_mgmt.html'
-
+    
 
 class SkillView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/skill_mgmt.html'
