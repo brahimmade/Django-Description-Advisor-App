@@ -58,6 +58,10 @@
                                 <option value="-id">Descending ID</option>
                             </select>
                         </label>
+                        <label style="display: inline-block">job titles filter
+                            <div id="job-title-list-filter" style="width: 400px;"></div>
+                        </label>
+
                     </div>
                     <div class="dataTable-search">
                         <div class="input-group input-group-joined">
@@ -92,7 +96,8 @@
                     </table>
                 </div>
                 <div class="dataTable-bottom">
-                    <div class="dataTable-info">Total entries <span id="total-items"></span> , Total marks <span id="total-marks"></span></div>
+                    <div class="dataTable-info">Total entries <span id="total-items"></span> , Total marks <span
+                            id="total-marks"></span></div>
                     <nav class="dataTable-pagination">
                         <ul class="dataTable-pagination-list">
 
@@ -385,10 +390,10 @@
             main_url = new URL(host_url + next_page_url)
             fetchData(main_url)
         }
-        else{
+        else {
             fetchData(main_url)
         }
-        
+
     });
 
     $("#prev-page-btn").click(function (e) {
@@ -397,7 +402,7 @@
             main_url = new URL(host_url + prev_page_url)
             fetchData(main_url)
         }
-        else{
+        else {
             fetchData(main_url)
         }
     });
@@ -510,8 +515,35 @@
                     markSearchResults: true,
                 });
 
+                VirtualSelect.init({
+                    ele: '#job-title-list-filter',
+                    options: job_title_options,
+                    multiple: true,
+                    search: true,
+                    showSelectedOptionsFirst: true,
+                    markSearchResults: true,
+                });
+
             })
     })
+    $('#job-title-list-filter').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        if (valueSelected.length < 1) {
+            main_url.searchParams.delete('job_title');
+            console.log(main_url)
+            fetchData(main_url)
 
+        }
+        else {
+            main_url.searchParams.delete('job_title');
+
+            for (job_title_id of valueSelected) {
+                main_url.searchParams.append('job_title', job_title_id);
+            }
+            console.log(main_url)
+            fetchData(main_url)
+        }
+    });
 </script>
 {% endblock %}
