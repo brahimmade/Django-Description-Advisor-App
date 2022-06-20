@@ -85,7 +85,7 @@ class JobTitleListCreateView(generics.ListCreateAPIView):
     serializer_class = JobTitleSerializer
     queryset = JobTitle.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {}
+    filterset_fields = {'job_title':{'exact'}}
     search_fields = ["name",'id']
     ordering_fields = ["created_date", 'name','id']
     pagination_class = DefaultPagination
@@ -153,7 +153,7 @@ class DescriptionListCreateView(generics.ListCreateAPIView):
     serializer_class = DescriptionSerializer
     queryset = Description.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {}
+    filterset_fields = {'job_title':{'exact'}}
     search_fields = ["text",'id']
     ordering_fields = ["created_date",'id']
     pagination_class = DefaultPagination

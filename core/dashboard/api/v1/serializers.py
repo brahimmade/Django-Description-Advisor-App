@@ -15,6 +15,7 @@ class SkillSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
+        rep['related_job_titles'] = instance.job_title.all().count()
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
         return rep 
@@ -95,6 +96,7 @@ class DescriptionSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
+        rep['related_job_titles'] = instance.job_title.all().count()
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
         return rep 
