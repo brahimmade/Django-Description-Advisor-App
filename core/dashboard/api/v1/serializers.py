@@ -49,6 +49,8 @@ class JobTitleSerializer(serializers.ModelSerializer):
         
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
+        rep['related_skills'] = Skill.objects.filter(job_title__in=[instance]).count()
+        rep['related_descriptions'] = Description.objects.filter(job_title__in=[instance]).count()
         return rep
     
     def create(self, validated_data):
