@@ -507,6 +507,7 @@
             url: `/dashboard/api/v1/description/${id}/`,
             success: function (data) {
                 fetchData(main_url)
+                $('#description-edit-form').trigger("reset");
                 $("#editModal").modal('hide');
             },
             failure: function (response) {
