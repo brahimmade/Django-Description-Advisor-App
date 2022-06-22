@@ -135,7 +135,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3"><label for="description-text">Description Text </label>
-                        <textarea class="tiny-mce-editor" name="text"></textarea>
+                        <textarea class="form-control" name="text"></textarea>
                     </div>
                     <div class="mb-3" style="width: 100%;">
                         <label for="job-title-list-selection">Job Titles </label>
@@ -168,7 +168,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3"><label for="description-text">Description Text </label>
-                        <textarea id="description-text-edit" class="tiny-mce-editor" name="text"></textarea>
+                        <textarea id="description-text-edit" class="form-control" name="text"></textarea>
                     </div>
                     <div class="mb-3" style="width: 100%;">
                         <label for="job-title-list-selection-edit">Job Titles </label>
@@ -358,7 +358,8 @@
                 // console.log(result_data.text)
 
             }).then(function () {
-                tinymce.get("description-text-edit").setContent(result_data.text);
+                // tinymce.get("description-text-edit").setContent(result_data.text);
+                $('#description-text-edit').text(result_data.text)
                 let job_title_list = (result_data.job_title).map(obj => { return obj.id })
                 // console.log(job_title_list)
                 fetchJobTitles(job_title_list)
