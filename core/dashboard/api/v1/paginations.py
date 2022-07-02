@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from urllib.parse import urlparse
 
 def get_relative_path(url):
-    print(url)
+    # print(url)
     if url != None:
         url = urlparse(url)
         return f"{url.path}?{url.query}"
