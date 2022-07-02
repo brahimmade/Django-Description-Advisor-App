@@ -5,9 +5,10 @@ from django.db import models
 class JobTitle(models.Model):
     name = models.CharField(max_length=250)
     is_core = models.BooleanField(default=True)
-    
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    related_skills = models.IntegerField(default=0)
+    related_descriptions = models.IntegerField(default=0)
     is_archived = models.BooleanField(default=False)
     is_marked = models.BooleanField(default=False)
     
@@ -22,6 +23,7 @@ class Skill(models.Model):
     job_title = models.ManyToManyField(JobTitle)
     is_archived = models.BooleanField(default=False)
     is_marked = models.BooleanField(default=False)
+    related_job_titles = models.IntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     
@@ -39,6 +41,7 @@ class Description(models.Model):
     text= models.TextField()
     is_archived = models.BooleanField(default=False)
     is_marked = models.BooleanField(default=False)
+    related_job_titles = models.IntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     

@@ -10,7 +10,6 @@ urlpatterns = [
     path("skill/",views.SkillView.as_view(),name="skill-view"),
     path("job-title/",views.JobTitleView.as_view(),name="job-title-view"),
     
-    
     # skill urls
     # path("skill/",views.SkillListView.as_view(),name="skill-list"),
     # path("skill/create/",views.SkillCreateView.as_view(),name="skill-create"),

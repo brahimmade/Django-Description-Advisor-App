@@ -3,12 +3,16 @@ from rest_framework.response import Response
 from urllib.parse import urlparse
 
 def get_relative_path(url):
-    url = urlparse(url)
-    return f"{url.path}?{url.query}"
+    print(url)
+    if url != None:
+        url = urlparse(url)
+        return f"{url.path}?{url.query}"
+    else:
+        return "#"
     
 
 class DefaultPagination(PageNumberPagination):
-    page_size = 20
+    page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
     def get_paginated_response(self, data):

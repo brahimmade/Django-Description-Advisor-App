@@ -56,10 +56,14 @@
                                 <option value="-created_date">Descending Date</option>
                                 <option value="id">Ascending ID</option>
                                 <option value="-id">Descending ID</option>
+                                <option value="related_skills">Ascending Related Skills</option>
+                                <option value="-related_skills">Descending Related Skills</option>
+                                <option value="related_descriptions">Ascending Related Descriptions</option>
+                                <option value="-related_descriptions">Descending Related Descriptions</option>
                             </select>
                         </label>
                     </div>
-                    
+
                     <div class="dataTable-search">
                         <div class="input-group input-group-joined">
                             <input class="form-control pe-0" type="text" placeholder="Input text search"
@@ -70,6 +74,14 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="dataTable-top">
+                    <div class="float-start">
+                        <label>Calculate Relations
+                            <button class="btn btn-sm btn-primary" onclick="calculateRelations()">Execute</button>
+                        </label>
+                        
+                    </div>
                 </div>
                 <div class="dataTable-container">
                     <table class="dataTable-table">
@@ -93,24 +105,15 @@
                     </table>
                 </div>
                 <div class="dataTable-bottom">
-                    <div class="dataTable-info">Total entries <span id="total-items"></span> , Total marks <span id="total-marks"></span></div>
-                    <nav class="dataTable-pagination">
-                        <ul class="dataTable-pagination-list">
+                    <div class="dataTable-info">Total entries <span id="total-items"></span> , Total marks <span
+                            id="total-marks"></span></div>
 
-                            <li class=""><a id="prev-page-btn" href="#">Prev Page</a></li>
-                            <li class=""><a id="next-page-btn" href="#">Next Page</a></li>
-                            <!-- <li class="active"><a href="#">1</a></li>
-                            <li class=""><a href="#">2</a></li>
-                            <li class=""><a href="#">3</a></li>
-                            <li class=""><a href="#">4</a></li>
-                            <li class=""><a href="#">5</a></li>
-                            <li class=""><a href="#">6</a></li>
-                            <li class=""><a href="#">7</a></li>
-                            <li class="ellipsis"><a href="#">…</a></li>
-                            <li class=""><a href="#" data-page="167">167</a></li>
-                            <li class="pager"><a href="#" data-page="2">›</a></li> -->
+                    <nav class="dataTable-pagination">
+                        <ul class="dataTable-pagination-list" id="pagination-wrapper">
                         </ul>
                     </nav>
+
+
                 </div>
             </div>
         </div>
@@ -178,8 +181,7 @@
     var host_url = location.protocol + '//' + location.host
     var main_url = new URL(host_url + "/dashboard/api/v1/job-title/")
     var page_number = null;
-    var next_page_url = null;
-    var prev_page_url = null;
+
     var general_id;
 
     function get_job_titles(item) {
@@ -198,8 +200,6 @@
             function (data, textStatus, jqXHR) {
                 $('#total-items').text(data.total_items)
                 $('#total-marks').text(data.total_marks)
-                next_page_url = data.links.next;
-                prev_page_url = data.links.previous;
                 results_data = data.results
                 wrapper.empty()
                 results_data.forEach(function (item, i) {
@@ -224,9 +224,59 @@
 
 
                 )
+                createPagination(data.links.current, data.total_pages, data.total_items)
             })
 
     }
+    function createPagination(current_page, total_pages, total_items) {
+        let elements = ""
+        if (current_page != 1) {
+            elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(1)})">${1}</a></li>`
+            elements += `<li ><a class="PaginationButton" href="#"">...</a></li>`
+            elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(current_page) - 1})">Prev Page</a></li>`
+        }
+
+        for (var i = +current_page - 3; i <= +current_page; i++) {
+            if (i >= 1) {
+                if (+current_page != i) {
+                    elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(i)})">${i}</a></li>`
+                }
+            }
+        }
+        elements += `<li class="active"><a href="#">${current_page}</a></li>`
+
+        for (var i = +current_page + 1; i <= +current_page + 3; i++) {
+            if (i <= total_pages) {
+                if (+current_page != i) {
+                    elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(i)})">${i}</a></li>`
+
+                }
+            }
+        }
+
+        if (current_page != total_pages) {
+
+            elements += `<li ><a class="PaginationButton" href="#"">...</a></li>`
+            elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(current_page) + 1})" >Next Page</a></li>`
+            elements += `<li ><a class="PaginationButton" href="#" onclick="changePage(${parseInt(total_pages)})">${total_pages}</a></li>`
+        }
+        $('#pagination-wrapper').html(elements)
+    }
+
+    function changePage(page_num) {
+        // console.log(page_num)
+        main_url.searchParams.set('page', page_num);
+        fetchData(main_url)
+    }
+
+
+    $("#page-size-num").change(function (e) {
+        main_url.searchParams.set('page', 1);
+        main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
 
 
     function removeItem(id) {
@@ -333,44 +383,7 @@
     });
 
 
-    $("#next-page-btn").click(function (e) {
-        e.preventDefault()
-        if (next_page_url !== null) {
-            main_url = new URL(host_url + next_page_url)
-            fetchData(main_url)
-        }
-        else{
-            fetchData(main_url)
-        }
-        
-    });
 
-    $("#prev-page-btn").click(function (e) {
-        e.preventDefault()
-        if (prev_page_url !== null) {
-            main_url = new URL(host_url + prev_page_url)
-            fetchData(main_url)
-        }
-        else{
-            fetchData(main_url)
-        }
-    });
-
-    $("#page-size-num").change(function (e) {
-
-        main_url.searchParams.set('page_size', $(this).find(":selected").val());
-        fetchData(main_url)
-        // url.searchParams.append('x', 42);
-
-    });
-
-    $("#page-size-num").change(function (e) {
-
-        main_url.searchParams.set('page_size', $(this).find(":selected").val());
-        fetchData(main_url)
-        // url.searchParams.append('x', 42);
-
-    });
 
     $("#ordering-filter").change(function (e) {
 
@@ -438,6 +451,24 @@
             }
         });
     });
+
+    function calculateRelations(){
+        $.ajax({
+            // contentType: "multipart/form-data",
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            type: 'POST',
+            url: `/dashboard/api/v1/job-title/calculate-relation/`,
+            success: function (data) {
+                alert('calculating relations done')
+            },
+            failure: function (response) {
+                alert(response)
+            }
+        });
+
+    }
 
 
 </script>

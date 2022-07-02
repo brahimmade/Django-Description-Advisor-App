@@ -260,6 +260,14 @@
         let csrftoken = getCookie('csrftoken');
 
     </script>
+    <script>
+        function removeLoader() {
+            $("#loadingDiv").fadeOut(500, function () {
+                // fadeOut complete. Remove the loading div
+                $("#loadingDiv").remove(); //makes page more lightweight 
+            });
+        }
+    </script>
     {% block extra_js %}
     {% endblock %}
 </body>

@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ["id", "name",'job_title','is_core','is_marked','is_archived']
+        fields = ["id", "name",'job_title','is_core','is_marked','related_job_titles','is_archived']
         read_only_fields = ['is_marked','is_archived']
     
     def validate(self, attrs):
@@ -14,8 +14,8 @@ class SkillSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        instance.related_job_titles = instance.job_title.all().count()
         rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
-        rep['related_job_titles'] = instance.job_title.all().count()
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
         return rep 
@@ -40,18 +40,16 @@ class SkillMarkSerializer(serializers.Serializer):
 
 
 class JobTitleSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = JobTitle
-        fields = ["id", "name",'is_core','is_marked','is_archived','created_date','updated_date']
+        fields = ["id", "name",'is_core','is_marked','is_archived','created_date','related_skills','related_descriptions','updated_date']
         read_only_fields = ['is_marked','is_archived']
         
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
-        rep['related_skills'] = Skill.objects.filter(job_title__in=[instance]).count()
-        rep['related_descriptions'] = Description.objects.filter(job_title__in=[instance]).count()
         return rep
     
     def create(self, validated_data):
@@ -87,7 +85,7 @@ class JobTitleMinimumSerializer(serializers.ModelSerializer):
 class DescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Description
-        fields = ["id", "text",'job_title','is_core','is_marked','is_archived','created_date','updated_date']
+        fields = ["id", "text",'job_title','is_core','is_marked','is_archived','created_date','related_job_titles','updated_date']
         read_only_fields = ['is_marked','is_archived']
         
     def validate(self, attrs):
@@ -96,7 +94,7 @@ class DescriptionSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
-        rep['related_job_titles'] = instance.job_title.all().count()
+        # rep['related_job_titles'] = instance.job_title.all().count()
         rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
         rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
         return rep 

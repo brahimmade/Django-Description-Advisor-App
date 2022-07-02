@@ -22,7 +22,7 @@ class SkillListCreateView(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {'job_title': ["exact"]}
     search_fields = ["name",'id']
-    ordering_fields = ["created_date", 'name','id']
+    ordering_fields = ["created_date", 'name','id','related_job_titles']
     pagination_class = DefaultPagination
     
     def list(self, request, *args, **kwargs):  
@@ -78,7 +78,6 @@ class SkillMarkView(generics.GenericAPIView):
         
         
         return Response({"detail": f"skill obj {skill_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
-    
 
 class JobTitleListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -87,7 +86,7 @@ class JobTitleListCreateView(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {}
     search_fields = ["name",'id']
-    ordering_fields = ["created_date", 'name','id']
+    ordering_fields = ["created_date", 'name','id','related_descriptions','related_skills']
     pagination_class = DefaultPagination
     
     def list(self, request, *args, **kwargs):  
@@ -155,7 +154,7 @@ class DescriptionListCreateView(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {'job_title':{'exact'}}
     search_fields = ["text",'id']
-    ordering_fields = ["created_date",'id']
+    ordering_fields = ["created_date",'id','related_job_titles']
     pagination_class = DefaultPagination
     
     def list(self, request, *args, **kwargs):  
@@ -210,3 +209,32 @@ class DescriptionMarkView(generics.GenericAPIView):
             description_obj.is_marked = True
             description_obj.save()
         return Response({"detail": f"description object {description_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
+    
+
+class SkillRelationCalculateView(views.APIView):
+    def post(self, request, *args, **kwargs):        
+        skill_query = Skill.objects.filter(is_archived=False)
+        for skill_obj in skill_query:
+            skill_obj.related_job_titles =  skill_obj.job_title.all().count()
+            skill_obj.save()
+        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
+    
+class JobTitleRelationCalculateView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        description_query = Description.objects.filter(is_archived=False)
+        skill_query = Skill.objects.filter(is_archived=False)
+        job_title_query = JobTitle.objects.filter(is_archived=False)
+        for job_obj in job_title_query:
+            job_obj.related_descriptions = description_query.filter(job_title__in=[job_obj]).count()
+            job_obj.related_skills =  skill_query.filter(job_title__in=[job_obj]).count()
+            job_obj.save()
+            
+        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
+    
+class DescriptionRelationCalculateView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        description_query = Description.objects.filter(is_archived=False)
+        for description_obj in description_query:
+            description_obj.related_job_titles =  description_obj.job_title.all().count()
+            description_obj.save()
+        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
