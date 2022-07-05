@@ -25,8 +25,8 @@ class SkillArchiveSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         skill_obj = get_object_or_404(Skill,pk=attrs.get('skill_id',None))
-        if skill_obj.is_archived:
-            raise serializers.ValidationError({"detail":"it is already archived"})
+        # if skill_obj.is_archived:
+        #     raise serializers.ValidationError({"detail":"it is already archived"})
         attrs['skill_obj'] = skill_obj
         return super().validate(attrs)
 
@@ -64,8 +64,8 @@ class JobTitleArchiveSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         job_title_obj = get_object_or_404(JobTitle,pk=attrs.get('job_title_id',None))
-        if job_title_obj.is_archived:
-            raise serializers.ValidationError({"detail":"it is already archived"})
+        # if job_title_obj.is_archived:
+        #     raise serializers.ValidationError({"detail":"it is already archived"})
         attrs['job_title_obj'] = job_title_obj
         return super().validate(attrs)
 
@@ -105,8 +105,6 @@ class DescriptionArchiveSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         description_obj = get_object_or_404(Description,pk=attrs.get('description_id',None))
-        if description_obj.is_archived:
-            raise serializers.ValidationError({"detail":"it is already archived"})
         attrs['description_obj'] = description_obj
         return super().validate(attrs)
 

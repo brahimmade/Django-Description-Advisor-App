@@ -96,8 +96,12 @@
                                 <option value="mark">Mark the selected items</option>
                                 <option value="unmark">UnMark the selected items</option>
                                 <option value="archive">Archive the selected items</option>
+                                <option value="unarchive">UnArchive the selected items</option>
                             </select>
                             <button class="btn btn-sm btn-primary" onclick="applyMultipleOperation()">apply</button>
+                        </label>
+                        <label>Show Archived
+                            <input type="checkbox" id="show-archived" onchange="showArchivedItems(this)">
                         </label>
 
                     </div>
@@ -229,7 +233,7 @@
 </script>
 <script>
     var host_url = location.protocol + '//' + location.host
-    var main_url = new URL(host_url + "/dashboard/api/v1/description/")
+    var main_url = new URL(host_url + "/dashboard/api/v1/description/?is_archived=false")
     var page_number = null;
 
     var general_id;
@@ -257,7 +261,7 @@
                 wrapper.empty()
                 results_data.forEach(function (item, i) {
                     // for (post of data.results) {
-                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""} ${(item.is_archived) ? "background-color:#ffe7b8" : ""}'>
                             <td><input type="checkbox" class="selected-items" value="${item.id}"></td>
                             <td>${i += 1}</td>
                             <td>${item.id}</td>
@@ -271,7 +275,7 @@
                             <td>${item.updated_date}</td>
                             <td>
                                 <button class="btn btn-primary btn-xs" type="button" onclick="openEditModal(${item.id})" >Edit</button>
-                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">Archive</button>
+                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">${(item.is_archived) ? "UnArchive" : "Archive"}</button>
                                 <button class="btn btn-danger btn-xs" type="button" onclick="removeItem(${item.id})">Delete</button>
                                 <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${(item.is_marked) ? "UnMark" : "Mark"}</button>
                             </td>
@@ -390,7 +394,7 @@
     }
 
     function archiveItem(id) {
-        if (confirm(`Are you sure you want to archive this ${id} id?`)) {
+        if (confirm(`Are you sure you want to archive/unarchive this ${id} id?`)) {
             formData = new FormData();
             formData.append('description_id', id)
             url = `/dashboard/api/v1/description/archive/`
@@ -685,6 +689,15 @@
 
             });
         }
+    }
+    function showArchivedItems(checkbox) {
+        if (checkbox.checked == true) {
+            main_url.searchParams.set('is_archived', '');
+        } else {
+            main_url.searchParams.set('is_archived', false);
+        }
+       
+        fetchData(main_url)
     }
 
 

@@ -87,10 +87,14 @@
                                 <option value="mark">Mark the selected items</option>
                                 <option value="unmark">UnMark the selected items</option>
                                 <option value="archive">Archive the selected items</option>
+                                <option value="unarchive">UnArchive the selected items</option>
                             </select>
                             <button class="btn btn-sm btn-primary" onclick="applyMultipleOperation()">apply</button>
                         </label>
-                        
+                        <label>Show Archived
+                            <input type="checkbox" id="show-archived" onchange="showArchivedItems(this)">
+                        </label>
+
                     </div>
                 </div>
                 <div class="dataTable-container">
@@ -205,7 +209,7 @@
 
 <script>
     var host_url = location.protocol + '//' + location.host
-    var main_url = new URL(host_url + "/dashboard/api/v1/skill/")
+    var main_url = new URL(host_url + "/dashboard/api/v1/skill/?is_archived=false")
     var page_number = null;
     var next_page_url = null;
     var prev_page_url = null;
@@ -235,7 +239,7 @@
                 wrapper.empty()
                 results_data.forEach(function (item, i) {
                     // for (post of data.results) {
-                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
+                    wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}  ${(item.is_archived) ? "background-color:#ffe7b8" : ""}'>
                             <td><input type="checkbox" class="selected-items" value="${item.id}"></td>
                             <td>${i += 1}</td>
                             <td>${item.id}</td>
@@ -249,7 +253,7 @@
                             <td>${item.updated_date}</td>
                             <td>
                                 <button class="btn btn-primary btn-xs" type="button" onclick="openEditModal(${item.id})" >Edit</button>
-                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">Archive</button>
+                                <button class="btn btn-warning btn-xs" type="button" onclick="archiveItem(${item.id})">${(item.is_archived) ? "UnArchive" : "Archive"}</button>
                                 <button class="btn btn-danger btn-xs" type="button" onclick="removeItem(${item.id})">Delete</button>
                                 <button class="btn btn-success btn-xs" type="button" onclick="markItem(${item.id})">${(item.is_marked) ? "UnMark" : "Mark"}</button>
                             </td>
@@ -568,7 +572,7 @@
             fetchData(main_url)
         }
     });
-    function calculateRelations(){
+    function calculateRelations() {
         $.ajax({
             // contentType: "multipart/form-data",
             headers: {
@@ -596,7 +600,7 @@
             }).get()
             formData = new FormData();
             formData.append('operation_type', operation_type)
-            for (let item_id of inputs_id){
+            for (let item_id of inputs_id) {
                 formData.append('list_ids', item_id)
             }
             url = `/dashboard/api/v1/skill/multi-select/action/`
@@ -610,7 +614,7 @@
                 processData: false,
                 contentType: false,
                 url: url,
-                success: function(data, textStatus, XmlHttpRequest) {
+                success: function (data, textStatus, XmlHttpRequest) {
                     fetchData(main_url)
                     alert(data.detail)
                 },
@@ -620,6 +624,15 @@
 
             });
         }
+    }
+    function showArchivedItems(checkbox) {
+        if (checkbox.checked == true) {
+            main_url.searchParams.set('is_archived', '');
+        } else {
+            main_url.searchParams.set('is_archived', false);
+        }
+       
+        fetchData(main_url)
     }
 </script>
 {% endblock %}

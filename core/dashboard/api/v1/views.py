@@ -18,9 +18,9 @@ from .paginations import *
 class SkillListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SkillSerializer
-    queryset = Skill.objects.filter(is_archived=False)
+    queryset = Skill.objects.filter()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {'job_title': ["exact"]}
+    filterset_fields = {'job_title': ["exact"],'is_archived':["exact"]}
     search_fields = ["name", 'id']
     ordering_fields = ["created_date", 'name', 'id', 'related_job_titles']
     pagination_class = DefaultPagination
@@ -53,8 +53,15 @@ class SkillArchiveView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         skill_obj = serializer.validated_data['skill_obj']
-        skill_obj.is_archived = True
-        skill_obj.save()
+        if skill_obj.is_archived:
+            operation = 'unarchived'
+            skill_obj.is_archived = False
+            skill_obj.save()
+        else:
+            operation = 'archived'
+            skill_obj.is_archived = True
+            skill_obj.save()
+        
         return Response({"detail": f"skill obj {skill_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
 
 
@@ -82,9 +89,9 @@ class SkillMarkView(generics.GenericAPIView):
 class JobTitleListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = JobTitleSerializer
-    queryset = JobTitle.objects.filter(is_archived=False)
+    queryset = JobTitle.objects.filter()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {}
+    filterset_fields = {'is_archived':['exact']}
     search_fields = ["name", 'id']
     ordering_fields = ["created_date", 'name', 'id',
                        'related_descriptions', 'related_skills']
@@ -124,8 +131,14 @@ class JobTitleArchiveView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         job_title_obj = serializer.validated_data['job_title_obj']
-        job_title_obj.is_archived = True
-        job_title_obj.save()
+        if job_title_obj.is_archived:
+            operation = 'unarchive'
+            job_title_obj.is_archived = False
+            job_title_obj.save()
+        else:
+            operation = 'archive'
+            job_title_obj.is_archived = True
+            job_title_obj.save()
         return Response({"detail": f"job title obj {job_title_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
 
 
@@ -152,9 +165,9 @@ class JobTitleMarkView(generics.GenericAPIView):
 class DescriptionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DescriptionSerializer
-    queryset = Description.objects.filter(is_archived=False)
+    queryset = Description.objects.filter()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {'job_title': {'exact'}}
+    filterset_fields = {'job_title': {'exact'},'is_archived':['exact']}
     search_fields = ["text", 'id']
     ordering_fields = ["created_date", 'id', 'related_job_titles']
     pagination_class = DefaultPagination
@@ -187,8 +200,14 @@ class DescriptionArchiveView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         description_obj = serializer.validated_data['description_obj']
-        description_obj.is_archived = True
-        description_obj.save()
+        if description_obj.is_archived:
+            operation = 'unarchived'
+            description_obj.is_archived = False
+            description_obj.save()
+        else:
+            operation = 'archived'
+            description_obj.is_archived = True
+            description_obj.save()
         return Response({"detail": f"description object {description_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
 
 
@@ -250,7 +269,6 @@ class DescriptionRelationCalculateView(views.APIView):
 
 
 def mark_objects(Model, list_id):
-    print(list_id)
     failed_objects = 0
     for id in list_id:
         try:
@@ -259,7 +277,6 @@ def mark_objects(Model, list_id):
             object.save()
         except:
             failed_objects += 1
-        print(id)
     return failed_objects
 
 
