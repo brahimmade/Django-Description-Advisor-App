@@ -81,7 +81,7 @@
                                 <i data-feather="search"></i>
                             </span>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -90,13 +90,23 @@
                         <label>Calculate Relations
                             <button class="btn btn-sm btn-primary" onclick="calculateRelations()">Execute</button>
                         </label>
-                        
+                        <label>Multiple Select Operation
+                            <select class="dataTable-selector" id="operation-selection">
+                                <option value="None" selected>None</option>
+                                <option value="mark">Mark the selected items</option>
+                                <option value="unmark">UnMark the selected items</option>
+                                <option value="archive">Archive the selected items</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="applyMultipleOperation()">apply</button>
+                        </label>
+
                     </div>
                 </div>
                 <div class="dataTable-container">
                     <table class="dataTable-table">
                         <thead>
                             <tr>
+                                <th style="width: 2.08372%;">Sct</th>
                                 <th style="width: 4.08372%;">#</th>
                                 <th style="width: 4.08372%;">Id</th>
                                 <th style="width: 40.2795%;">Text</th>
@@ -248,6 +258,7 @@
                 results_data.forEach(function (item, i) {
                     // for (post of data.results) {
                     wrapper.append(`<tr id='table-item-${item.id}' style='${(item.is_marked) ? "background-color:#e6ffef" : ""}'>
+                            <td><input type="checkbox" class="selected-items" value="${item.id}"></td>
                             <td>${i += 1}</td>
                             <td>${item.id}</td>
                             <td>${item.text}</td>
@@ -620,7 +631,7 @@
 
     });
 
-    function calculateRelations(){
+    function calculateRelations() {
         $.ajax({
             // contentType: "multipart/form-data",
             headers: {
@@ -637,7 +648,45 @@
         });
 
     }
-    
+
+    function applyMultipleOperation() {
+        let operation_type = $("#operation-selection").find(":selected").val()
+        let inputs_id = []
+        $("#operation-selection").prop('selectedIndex', 0);
+        if (operation_type != 'None') {
+            inputs_id = $("input[class='selected-items']:checked").map(function () {
+                $(this).prop('checked', false);
+                return parseInt($(this).val())
+            }).get()
+            formData = new FormData();
+            formData.append('operation_type', operation_type)
+            for (let item_id of inputs_id){
+                formData.append('list_ids', item_id)
+            }
+            
+            url = `/dashboard/api/v1/description/multi-select/action/`
+            $.ajax({
+                // contentType: "multipart/form-data",
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: url,
+                success: function(data, textStatus, XmlHttpRequest) {
+                    fetchData(main_url)
+                    alert(data.detail)
+                },
+                failure: function (response) {
+                    alert(response)
+                }
+
+            });
+        }
+    }
+
 
 </script>
 {% endblock %}

@@ -21,13 +21,14 @@ class SkillListCreateView(generics.ListCreateAPIView):
     queryset = Skill.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {'job_title': ["exact"]}
-    search_fields = ["name",'id']
-    ordering_fields = ["created_date", 'name','id','related_job_titles']
+    search_fields = ["name", 'id']
+    ordering_fields = ["created_date", 'name', 'id', 'related_job_titles']
     pagination_class = DefaultPagination
-    
-    def list(self, request, *args, **kwargs):  
+
+    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        response.data['total_marks'] = (
+            self.get_queryset()).filter(is_marked=True).count()
         return response
 
 
@@ -39,16 +40,15 @@ class SkillDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         object = self.get_object()
-        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+        if (object.is_core or request.user.is_superuser) and object.is_core:
             return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
-        
+
 
 class SkillArchiveView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SkillArchiveSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -57,11 +57,11 @@ class SkillArchiveView(generics.GenericAPIView):
         skill_obj.save()
         return Response({"detail": f"skill obj {skill_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
 
+
 class SkillMarkView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SkillMarkSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -75,9 +75,9 @@ class SkillMarkView(generics.GenericAPIView):
             operation = 'marked'
             skill_obj.is_marked = True
             skill_obj.save()
-        
-        
+
         return Response({"detail": f"skill obj {skill_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
+
 
 class JobTitleListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -85,20 +85,22 @@ class JobTitleListCreateView(generics.ListCreateAPIView):
     queryset = JobTitle.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {}
-    search_fields = ["name",'id']
-    ordering_fields = ["created_date", 'name','id','related_descriptions','related_skills']
+    search_fields = ["name", 'id']
+    ordering_fields = ["created_date", 'name', 'id',
+                       'related_descriptions', 'related_skills']
     pagination_class = DefaultPagination
-    
-    def list(self, request, *args, **kwargs):  
+
+    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        response.data['total_marks'] = (
+            self.get_queryset()).filter(is_marked=True).count()
         return response
+
 
 class JobTitleAllView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = JobTitleMinimumSerializer
     queryset = JobTitle.objects.filter(is_archived=False)
-
 
 
 class JobTitleDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -109,15 +111,15 @@ class JobTitleDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         object = self.get_object()
-        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+        if (object.is_core or request.user.is_superuser) and object.is_core:
             return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
+
 
 class JobTitleArchiveView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = JobTitleArchiveSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -125,13 +127,12 @@ class JobTitleArchiveView(generics.GenericAPIView):
         job_title_obj.is_archived = True
         job_title_obj.save()
         return Response({"detail": f"job title obj {job_title_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
-    
+
 
 class JobTitleMarkView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = JobTitleMarkSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -147,19 +148,21 @@ class JobTitleMarkView(generics.GenericAPIView):
             job_title_obj.save()
         return Response({"detail": f"description obj {job_title_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
 
+
 class DescriptionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DescriptionSerializer
     queryset = Description.objects.filter(is_archived=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {'job_title':{'exact'}}
-    search_fields = ["text",'id']
-    ordering_fields = ["created_date",'id','related_job_titles']
+    filterset_fields = {'job_title': {'exact'}}
+    search_fields = ["text", 'id']
+    ordering_fields = ["created_date", 'id', 'related_job_titles']
     pagination_class = DefaultPagination
-    
-    def list(self, request, *args, **kwargs):  
+
+    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        response.data['total_marks'] = (self.get_queryset()).filter(is_marked=True).count()
+        response.data['total_marks'] = (
+            self.get_queryset()).filter(is_marked=True).count()
         return response
 
 
@@ -171,16 +174,15 @@ class DescriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         object = self.get_object()
-        if ( object.is_core or  request.user.is_superuser) and  object.is_core:
+        if (object.is_core or request.user.is_superuser) and object.is_core:
             return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
-        
-        
+
+
 class DescriptionArchiveView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DescriptionArchiveSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -188,13 +190,12 @@ class DescriptionArchiveView(generics.GenericAPIView):
         description_obj.is_archived = True
         description_obj.save()
         return Response({"detail": f"description object {description_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
-    
+
 
 class DescriptionMarkView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DescriptionMarkSerializer
-    
-    
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -209,32 +210,138 @@ class DescriptionMarkView(generics.GenericAPIView):
             description_obj.is_marked = True
             description_obj.save()
         return Response({"detail": f"description object {description_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
-    
+
 
 class SkillRelationCalculateView(views.APIView):
-    def post(self, request, *args, **kwargs):        
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
         skill_query = Skill.objects.filter(is_archived=False)
         for skill_obj in skill_query:
-            skill_obj.related_job_titles =  skill_obj.job_title.all().count()
+            skill_obj.related_job_titles = skill_obj.job_title.all().count()
             skill_obj.save()
-        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
-    
+        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+
+
 class JobTitleRelationCalculateView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         description_query = Description.objects.filter(is_archived=False)
         skill_query = Skill.objects.filter(is_archived=False)
         job_title_query = JobTitle.objects.filter(is_archived=False)
         for job_obj in job_title_query:
-            job_obj.related_descriptions = description_query.filter(job_title__in=[job_obj]).count()
-            job_obj.related_skills =  skill_query.filter(job_title__in=[job_obj]).count()
+            job_obj.related_descriptions = description_query.filter(
+                job_title__in=[job_obj]).count()
+            job_obj.related_skills = skill_query.filter(
+                job_title__in=[job_obj]).count()
             job_obj.save()
-            
-        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
-    
+
+        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+
+
 class DescriptionRelationCalculateView(views.APIView):
     def post(self, request, *args, **kwargs):
         description_query = Description.objects.filter(is_archived=False)
         for description_obj in description_query:
-            description_obj.related_job_titles =  description_obj.job_title.all().count()
+            description_obj.related_job_titles = description_obj.job_title.all().count()
             description_obj.save()
-        return Response({"detail": "relations has been counted and set"},status=status.HTTP_201_CREATED)
+        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+
+
+def mark_objects(Model, list_id):
+    print(list_id)
+    failed_objects = 0
+    for id in list_id:
+        try:
+            object = Model.objects.get(id=id)
+            object.is_marked = True
+            object.save()
+        except:
+            failed_objects += 1
+        print(id)
+    return failed_objects
+
+
+def unmark_objects(Model, list_id):
+    failed_objects = 0
+    for id in list_id:
+        try:
+            object = Model.objects.get(id=id)
+            object.is_marked = False
+            object.save()
+        except:
+            failed_objects += 1
+    return failed_objects
+
+
+def archive_objects(Model, list_id):
+    failed_objects = 0
+    for id in list_id:
+        try:
+            object = Model.objects.get(id=id)
+            object.is_archived = True
+            object.save()
+        except:
+            failed_objects += 1
+    return failed_objects
+
+
+def unarchive_objects(Model, list_id):
+    failed_objects = 0
+    for id in list_id:
+        try:
+            object = Model.objects.get(id=id)
+            object.is_archived = False
+            object.save()
+        except:
+            failed_objects += 1
+    return failed_objects
+
+
+OPT_TYPE = {'mark': (lambda model, list_id: mark_objects(model, list_id)),
+            'unmark': (lambda model, list_id: unmark_objects(model, list_id)),
+            'archive': (lambda model, list_id: archive_objects(model, list_id)),
+            'unarchive': (lambda model, list_id: unarchive_objects(model, list_id))}
+
+
+class SkillMultiSelectAction(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = MultiSelectActionSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        list_ids = serializer.validated_data['list_ids']
+        operation_type = serializer.validated_data['operation_type']
+        operation_function = OPT_TYPE[operation_type]
+        failed_objects = operation_function(Skill, list_ids)
+        return Response({'detail': f'{operation_type} operation is done on {len(list_ids)} objects and {failed_objects} failed'})
+
+
+class DescriptionMultiSelectAction(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = MultiSelectActionSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        list_ids = serializer.validated_data['list_ids']
+        operation_type = serializer.validated_data['operation_type']
+        operation_function = OPT_TYPE[operation_type]
+        failed_objects = operation_function(Description, list_ids)
+        return Response({'detail': f'{operation_type} operation is done on {len(list_ids)} objects and {failed_objects} failed'})
+
+
+class JobTitleMultiSelectAction(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = MultiSelectActionSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        list_ids = serializer.validated_data['list_ids']
+        operation_type = serializer.validated_data['operation_type']
+        operation_function = OPT_TYPE[operation_type]
+        failed_objects = operation_function(JobTitle, list_ids)
+        return Response({'detail': f'{operation_type} operation is done on {len(list_ids)} objects and {failed_objects} failed'})

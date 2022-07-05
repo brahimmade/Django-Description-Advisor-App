@@ -119,3 +119,15 @@ class DescriptionMarkSerializer(serializers.Serializer):
         attrs['description_obj'] = description_obj
         return super().validate(attrs)
     
+
+
+
+class MultiSelectActionSerializer(serializers.Serializer):
+    operation_type = serializers.CharField(required=True)
+    list_ids = serializers.ListField()
+    
+    def validate(self, attrs):
+        OPT_TYPE_VALIDATE = ('mark', 'unmark', 'archive', 'unarchive')
+        if attrs.get("operation_type") not in OPT_TYPE_VALIDATE :
+            raise serializers.ValidationError('operation_type not defined')
+        return super().validate(attrs)
