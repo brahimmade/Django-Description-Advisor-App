@@ -643,8 +643,8 @@
             },
             type: 'POST',
             url: `/dashboard/api/v1/description/calculate-relation/`,
-            success: function (data) {
-                alert('calculating relations done')
+            success: function (data, textStatus, XmlHttpRequest) {
+                alert(data.detail)
             },
             failure: function (response) {
                 alert(response)

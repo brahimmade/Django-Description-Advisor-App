@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from ...models import *
 from .serializers import *
 from .paginations import *
-
+from .thread_task import SkillCalculationThread ,DescriptionCalculationThread,JobCalculationThread
 
 class SkillListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -236,10 +236,8 @@ class SkillRelationCalculateView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         skill_query = Skill.objects.filter(is_archived=False)
-        for skill_obj in skill_query:
-            skill_obj.related_job_titles = skill_obj.job_title.all().count()
-            skill_obj.save()
-        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+        SkillCalculationThread(skill_query).start()        
+        return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)
 
 
 class JobTitleRelationCalculateView(views.APIView):
@@ -249,23 +247,17 @@ class JobTitleRelationCalculateView(views.APIView):
         description_query = Description.objects.filter(is_archived=False)
         skill_query = Skill.objects.filter(is_archived=False)
         job_title_query = JobTitle.objects.filter(is_archived=False)
-        for job_obj in job_title_query:
-            job_obj.related_descriptions = description_query.filter(
-                job_title__in=[job_obj]).count()
-            job_obj.related_skills = skill_query.filter(
-                job_title__in=[job_obj]).count()
-            job_obj.save()
+        JobCalculationThread(skill_query,description_query,job_title_query).start() 
+        
 
-        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+        return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)
 
 
 class DescriptionRelationCalculateView(views.APIView):
     def post(self, request, *args, **kwargs):
         description_query = Description.objects.filter(is_archived=False)
-        for description_obj in description_query:
-            description_obj.related_job_titles = description_obj.job_title.all().count()
-            description_obj.save()
-        return Response({"detail": "relations has been counted and set"}, status=status.HTTP_201_CREATED)
+        DescriptionCalculationThread(description_query).start()  
+        return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)
 
 
 def mark_objects(Model, list_id):

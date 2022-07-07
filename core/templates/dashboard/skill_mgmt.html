@@ -580,8 +580,8 @@
             },
             type: 'POST',
             url: `/dashboard/api/v1/skill/calculate-relation/`,
-            success: function (data) {
-                alert('calculating relations done')
+            success: function (data, textStatus, XmlHttpRequest) {
+                alert(data.detail)
             },
             failure: function (response) {
                 alert(response)
@@ -631,7 +631,7 @@
         } else {
             main_url.searchParams.set('is_archived', false);
         }
-       
+
         fetchData(main_url)
     }
 </script>
