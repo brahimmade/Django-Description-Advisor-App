@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from ...models import *
 from .serializers import *
 from .paginations import *
-from .thread_task import SkillCalculationThread ,DescriptionCalculationThread,JobCalculationThread
+from .thread_task import SkillCalculationThread ,DescriptionCalculationThread,JobCalculationThread,AboutDescriptionCalculationThread
 
 class SkillListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -354,3 +354,94 @@ class JobTitleMultiSelectAction(generics.GenericAPIView):
         operation_function = OPT_TYPE[operation_type]
         failed_objects = operation_function(JobTitle, list_ids)
         return Response({'detail': f'{operation_type} operation is done on {len(list_ids)} objects and {failed_objects} failed'})
+
+
+
+class AboutDescriptionListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AboutDescriptionSerializer
+    queryset = AboutDescription.objects.filter()
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {'job_title': {'exact'},'is_archived':['exact']}
+    search_fields = ["text", 'id']
+    ordering_fields = ["created_date", 'id', 'related_job_titles']
+    pagination_class = DefaultPagination
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data['total_marks'] = (
+            self.get_queryset()).filter(is_marked=True).count()
+        return response
+
+
+class AboutDescriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """ getting detail of the post and edit plus removing it """
+    permission_classes = [IsAuthenticated]
+    serializer_class = AboutDescriptionSerializer
+    queryset = AboutDescription.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        object = self.get_object()
+        if (object.is_core or request.user.is_superuser) and object.is_core:
+            return Response({"detail": "you are not allowed to remove core objects instead archive them"}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
+
+
+class AboutDescriptionArchiveView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AboutDescriptionArchiveSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        description_obj = serializer.validated_data['description_obj']
+        if description_obj.is_archived:
+            operation = 'unarchived'
+            description_obj.is_archived = False
+            description_obj.save()
+        else:
+            operation = 'archived'
+            description_obj.is_archived = True
+            description_obj.save()
+        return Response({"detail": f"description object {description_obj.id} archived successfully"}, status=status.HTTP_202_ACCEPTED)
+
+
+class AboutDescriptionMarkView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AboutDescriptionMarkSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        description_obj = serializer.validated_data['description_obj']
+        operation = ''
+        if description_obj.is_marked:
+            operation = 'unmarked'
+            description_obj.is_marked = False
+            description_obj.save()
+        else:
+            operation = 'marked'
+            description_obj.is_marked = True
+            description_obj.save()
+        return Response({"detail": f"description object {description_obj.id} {operation} successfully"}, status=status.HTTP_202_ACCEPTED)
+    
+    
+class AboutDescriptionMultiSelectAction(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = MultiSelectActionSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        list_ids = serializer.validated_data['list_ids']
+        operation_type = serializer.validated_data['operation_type']
+        operation_function = OPT_TYPE[operation_type]
+        failed_objects = operation_function(AboutDescription, list_ids)
+        return Response({'detail': f'{operation_type} operation is done on {len(list_ids)} objects and {failed_objects} failed'})
+    
+
+class AboutDescriptionRelationCalculateView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        description_query = AboutDescription.objects.filter(is_archived=False)
+        AboutDescriptionCalculationThread(description_query).start()  
+        return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)

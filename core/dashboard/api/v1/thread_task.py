@@ -25,6 +25,19 @@ class DescriptionCalculationThread(threading.Thread):
             description_obj.related_job_titles = description_obj.job_title.all().count()
             description_obj.save()
         print("description thread done")
+
+
+class AboutDescriptionCalculationThread(threading.Thread):
+    def __init__(self, description_query):
+        self.description_query = description_query
+        print("description thread started")
+        threading.Thread.__init__(self)
+
+    def run(self):
+        for description_obj in self.description_query:
+            description_obj.related_job_titles = description_obj.job_title.all().count()
+            description_obj.save()
+        print("description thread done")
             
 class JobCalculationThread(threading.Thread):
     def __init__(self, skill_query,description_query,job_title_query):

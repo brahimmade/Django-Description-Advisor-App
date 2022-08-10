@@ -27,4 +27,11 @@ urlpatterns = [
     path("description/mark/",views.DescriptionMarkView.as_view(),name="description-archive"),
     path("description/calculate-relation/",views.DescriptionRelationCalculateView.as_view(),name="description-calculation"),
     path("description/multi-select/action/",views.DescriptionMultiSelectAction.as_view(),name="description-multi-select-action"),
+    
+    path("description-about/",views.AboutDescriptionListCreateView.as_view(),name="about-description-list-create"),
+    path("description-about/<int:pk>/",views.AboutDescriptionDetailView.as_view(),name="about-description-detail"),
+    path("description-about/archive/",views.AboutDescriptionArchiveView.as_view(),name="about-description-archive"),
+    path("description-about/mark/",views.AboutDescriptionMarkView.as_view(),name="about-description-archive"),
+    path("description-about/calculate-relation/",views.AboutDescriptionRelationCalculateView.as_view(),name="about-description-calculation"),
+    path("description-about/multi-select/action/",views.AboutDescriptionMultiSelectAction.as_view(),name="about-description-multi-select-action"),
 ]

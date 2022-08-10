@@ -54,3 +54,24 @@ class Description(models.Model):
     @property
     def snippets(self):
         return f"{self.text[:20]} ..."
+    
+    
+class AboutDescription(models.Model):
+    job_title = models.ManyToManyField(JobTitle)
+    is_core = models.BooleanField(default=False)
+    text= models.TextField()
+    is_archived = models.BooleanField(default=False)
+    is_marked = models.BooleanField(default=False)
+    related_job_titles = models.IntegerField(default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ('-created_date',)
+        
+    def __str__(self):
+        return f"{self.id} - {self.snippets}"
+    
+    @property
+    def snippets(self):
+        return f"{self.text[:20]} ..."

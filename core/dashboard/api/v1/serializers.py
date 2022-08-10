@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ...models import Skill, Description,JobTitle
+from ...models import Skill, Description,JobTitle,AboutDescription
 from django.shortcuts import get_object_or_404
 
 
@@ -128,4 +128,41 @@ class MultiSelectActionSerializer(serializers.Serializer):
         OPT_TYPE_VALIDATE = ('mark', 'unmark', 'archive', 'unarchive')
         if attrs.get("operation_type") not in OPT_TYPE_VALIDATE :
             raise serializers.ValidationError('operation_type not defined')
+        return super().validate(attrs)
+    
+    
+
+class AboutDescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutDescription
+        fields = ["id", "text",'job_title','is_core','is_marked','is_archived','created_date','related_job_titles','updated_date']
+        read_only_fields = ['is_marked','is_archived']
+        
+    def validate(self, attrs):
+        return super().validate(attrs)
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['job_title'] = JobTitleMinimumSerializer(instance.job_title,many=True).data
+        # rep['related_job_titles'] = instance.job_title.all().count()
+        rep['created_date'] = instance.created_date.strftime('%Y-%m-%d %H:%M')
+        rep['updated_date'] = instance.updated_date.strftime('%Y-%m-%d %H:%M')
+        return rep 
+
+
+class AboutDescriptionArchiveSerializer(serializers.Serializer):
+    description_id = serializers.IntegerField(required=True)
+    
+    def validate(self, attrs):
+        description_obj = get_object_or_404(AboutDescription,pk=attrs.get('description_id',None))
+        attrs['description_obj'] = description_obj
+        return super().validate(attrs)
+
+
+class AboutDescriptionMarkSerializer(serializers.Serializer):
+    description_id = serializers.IntegerField(required=True)
+    
+    def validate(self, attrs):
+        description_obj = get_object_or_404(AboutDescription,pk=attrs.get('description_id',None))
+        attrs['description_obj'] = description_obj
         return super().validate(attrs)
