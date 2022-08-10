@@ -519,6 +519,13 @@
             }
         });
     });
+    $("#page-size-num").change(function (e) {
+        main_url.searchParams.set('page', 1);
+        main_url.searchParams.set('page_size', $(this).find(":selected").text());
+        fetchData(main_url)
+        // url.searchParams.append('x', 42);
+
+    });
     window.addEventListener('DOMContentLoaded', event => {
         $.get('/dashboard/api/v1/job-title/all/', { async: true },
             function (data, textStatus, jqXHR) {
