@@ -43,7 +43,7 @@ class JobTitleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = JobTitle
-        fields = ["id", "name",'is_core','is_marked','is_archived','created_date','related_skills','related_descriptions','updated_date']
+        fields = ["id", "name",'is_core','is_marked','is_archived','created_date','related_skills','related_descriptions',"related_abouts",'updated_date']
         read_only_fields = ['is_marked','is_archived']
         
     def to_representation(self, instance):

@@ -40,10 +40,11 @@ class AboutDescriptionCalculationThread(threading.Thread):
         print("description thread done")
             
 class JobCalculationThread(threading.Thread):
-    def __init__(self, skill_query,description_query,job_title_query):
+    def __init__(self, skill_query,description_query,job_title_query,about_query):
         self.skill_query = skill_query
         self.description_query = description_query
         self.job_title_query = job_title_query
+        self.about_query = about_query
         print('job thread started')
         threading.Thread.__init__(self)
 
@@ -52,6 +53,8 @@ class JobCalculationThread(threading.Thread):
             job_obj.related_descriptions = self.description_query.filter(
                 job_title__in=[job_obj]).count()
             job_obj.related_skills = self.skill_query.filter(
+                job_title__in=[job_obj]).count()
+            job_obj.related_abouts = self.about_query.filter(
                 job_title__in=[job_obj]).count()
             job_obj.save()
         print("job thread done")

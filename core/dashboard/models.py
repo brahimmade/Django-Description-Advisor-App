@@ -9,6 +9,7 @@ class JobTitle(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     related_skills = models.IntegerField(default=0)
     related_descriptions = models.IntegerField(default=0)
+    related_abouts = models.IntegerField(default=0)
     is_archived = models.BooleanField(default=False)
     is_marked = models.BooleanField(default=False)
     

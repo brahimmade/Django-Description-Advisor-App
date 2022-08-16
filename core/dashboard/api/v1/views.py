@@ -247,7 +247,8 @@ class JobTitleRelationCalculateView(views.APIView):
         description_query = Description.objects.filter(is_archived=False)
         skill_query = Skill.objects.filter(is_archived=False)
         job_title_query = JobTitle.objects.filter(is_archived=False)
-        JobCalculationThread(skill_query,description_query,job_title_query).start() 
+        about_query = AboutDescription.objects.filter(is_archived=False)
+        JobCalculationThread(skill_query,description_query,job_title_query,about_query).start() 
         
 
         return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)
