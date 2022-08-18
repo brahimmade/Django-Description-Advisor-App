@@ -166,3 +166,28 @@ class AboutDescriptionMarkSerializer(serializers.Serializer):
         description_obj = get_object_or_404(AboutDescription,pk=attrs.get('description_id',None))
         attrs['description_obj'] = description_obj
         return super().validate(attrs)
+    
+
+
+class SkillOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = ["id", "name"]
+
+
+class JobTitleOutSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = JobTitle
+        fields = ["id", "name"]
+
+class DescriptionOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Description
+        fields = ["id", "text"]
+        
+
+class AboutDescriptionOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Description
+        fields = ["id", "text"]

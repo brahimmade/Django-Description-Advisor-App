@@ -9,6 +9,9 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.core.exceptions import PermissionDenied
+from django.conf import settings
+
 
 from ...models import *
 from .serializers import *
@@ -446,3 +449,60 @@ class AboutDescriptionRelationCalculateView(views.APIView):
         description_query = AboutDescription.objects.filter(is_archived=False)
         AboutDescriptionCalculationThread(description_query).start()  
         return Response({"detail": "relations are being process, it may take approximately 2 minute."}, status=status.HTTP_201_CREATED)
+    
+    
+    
+class SkillListOutView(generics.ListAPIView):
+    serializer_class = SkillOutSerializer
+    queryset = Skill.objects.filter(is_marked=True,is_archived=False)
+    filter_backends = [SearchFilter]
+    filterset_fields = {}
+    search_fields = ["name", 'id','job_title__name']
+    pagination_class = OutUsagePagination
+    
+    def list(self, request, *args, **kwargs):
+        if kwargs.get("token", None) != settings.OUT_USAGE_TOKEN:
+            raise PermissionDenied()
+        return super().list(request, *args, **kwargs)
+    
+
+
+class JobTitleListOutView(generics.ListAPIView):    
+    serializer_class = JobTitleOutSerializer
+    queryset = JobTitle.objects.filter(is_marked=True,is_archived=False)
+    filter_backends = [SearchFilter]
+    filterset_fields = {}
+    search_fields = ["name", 'id']
+    pagination_class = OutUsagePagination
+    
+    def list(self, request, *args, **kwargs):
+        if kwargs.get("token", None) != settings.OUT_USAGE_TOKEN:
+            raise PermissionDenied()
+        return super().list(request, *args, **kwargs)
+    
+    
+    
+class DescriptionListOutView(generics.ListAPIView):
+    serializer_class = DescriptionOutSerializer
+    queryset = Description.objects.filter(is_marked=True,is_archived=False)
+    filter_backends = [SearchFilter]
+    search_fields = ["text", 'id','job_title__name']
+    pagination_class = OutUsagePagination
+    
+    def list(self, request, *args, **kwargs):
+        if kwargs.get("token", None) != settings.OUT_USAGE_TOKEN:
+            raise PermissionDenied()
+        return super().list(request, *args, **kwargs)
+
+
+class AboutDescriptionListOutView(generics.ListAPIView):
+    serializer_class = AboutDescriptionOutSerializer
+    queryset = AboutDescription.objects.filter(is_marked=True,is_archived=False)
+    filter_backends = [SearchFilter]
+    search_fields = ["text", 'id','job_title__name']
+    pagination_class = OutUsagePagination
+    
+    def list(self, request, *args, **kwargs):
+        if kwargs.get("token", None) != settings.OUT_USAGE_TOKEN:
+            raise PermissionDenied()
+        return super().list(request, *args, **kwargs)

@@ -34,4 +34,10 @@ urlpatterns = [
     path("description-about/mark/",views.AboutDescriptionMarkView.as_view(),name="about-description-archive"),
     path("description-about/calculate-relation/",views.AboutDescriptionRelationCalculateView.as_view(),name="about-description-calculation"),
     path("description-about/multi-select/action/",views.AboutDescriptionMultiSelectAction.as_view(),name="about-description-multi-select-action"),
+    
+    
+    path("skill/out-usage/<str:token>/",views.SkillListOutView.as_view(),name="skill-list-out"),
+    path("job-title/out-usage/<str:token>/",views.JobTitleListOutView.as_view(),name="job-title-list-out"),
+    path("description/out-usage/<str:token>/",views.DescriptionListOutView.as_view(),name="description-list-out"),
+    path("description-about/out-usage/<str:token>/",views.AboutDescriptionListOutView.as_view(),name="about-description-list-out"),
 ]

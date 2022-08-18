@@ -247,3 +247,5 @@ LOGGING = {
         },
     },
 }
+
+OUT_USAGE_TOKEN = "a706ac3cd44a9bf6112402401b9289c27b88a352"
