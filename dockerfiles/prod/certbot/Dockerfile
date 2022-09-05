@@ -1,4 +1,4 @@
-FROM certbot/certbot:arm32v6-latest
+FROM certbot/certbot:latest
 
 COPY certify-init.sh /opt/
 RUN chmod +x /opt/certify-init.sh
