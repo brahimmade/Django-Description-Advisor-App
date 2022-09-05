@@ -40,20 +40,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(pattern_name='dashboard:index'), name='home'),
-    path("api-auth/", include("rest_framework.urls")),
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('summernote/', include('django_summernote.urls')),
-    path(
-        "swagger/",
-        schema_view.with_ui("swagger", cache_timeout=0),
-        name="schema-swagger-ui",
-    ),
-    path(
-        "redoc/",
-        schema_view.with_ui("redoc", cache_timeout=0),
-        name="schema-redoc",
-    ),
+
 ]
 
 if settings.DEBUG:
@@ -61,3 +51,32 @@ if settings.DEBUG:
                           document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+    
+if settings.SHOW_DEBUGGER_TOOLBAR:
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls')),]
+
+if settings.SHOW_SWAGGER:
+    urlpatterns += [
+        path("api-auth/", include("rest_framework.urls",
+                                  namespace="rest_framework")),
+        path(
+            "swagger/api.json",
+            schema_view.without_ui(cache_timeout=0),
+            name="schema-json",
+        ),
+        path(
+            "swagger/",
+            schema_view.with_ui("swagger", cache_timeout=0),
+            name="schema-swagger-ui",
+        ),
+        path(
+            "redoc/",
+            schema_view.with_ui("redoc", cache_timeout=0),
+            name="schema-redoc",
+        ),
+    ]
+
+handler400 = "core.error_views.error_400"  # bad_request
+handler403 = "core.error_views.error_403"  # permission_denied
+handler404 = "core.error_views.error_404"  # page_not_found
+handler500 = "core.error_views.error_500"  # server_error

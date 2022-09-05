@@ -1,21 +1,14 @@
-WARNING 2022-08-17 10:43:48,400 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
-WARNING 2022-08-17 10:43:48,402 django.server.log_message:161- "GET /accounts/login/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 404 3548
-WARNING 2022-08-17 10:43:48,618 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
-WARNING 2022-08-17 10:43:48,622 django.server.log_message:161- "GET /assets/fonts/metropolis/Metropolis-Regular.otf HTTP/1.1" 404 3279
-WARNING 2022-08-17 10:44:57,735 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
-WARNING 2022-08-17 10:44:57,743 django.server.log_message:161- "GET /accounts/login/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 404 3548
-WARNING 2022-08-17 10:44:57,890 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
-WARNING 2022-08-17 10:44:57,910 django.server.log_message:161- "GET /assets/fonts/metropolis/Metropolis-Regular.otf HTTP/1.1" 404 3279
-WARNING 2022-08-17 10:45:16,356 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
-WARNING 2022-08-17 10:45:16,364 django.server.log_message:161- "GET /accounts/login/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 404 3548
-WARNING 2022-08-17 10:45:16,675 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
-WARNING 2022-08-17 10:45:16,676 django.server.log_message:161- "GET /assets/fonts/metropolis/Metropolis-Regular.otf HTTP/1.1" 404 3279
-WARNING 2022-08-17 10:45:17,093 django.request.log_response:224- Not Found: /favicon.ico
-WARNING 2022-08-17 10:45:17,094 django.server.log_message:161- "GET /favicon.ico HTTP/1.1" 404 3174
-WARNING 2022-08-17 10:45:19,481 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
-WARNING 2022-08-17 10:45:19,482 django.server.log_message:161- "GET /accounts/login/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 404 3548
-WARNING 2022-08-17 10:45:19,594 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
-WARNING 2022-08-17 10:45:19,602 django.server.log_message:161- "GET /assets/fonts/metropolis/Metropolis-Regular.otf HTTP/1.1" 404 3279
-WARNING 2022-08-17 10:45:24,589 django.server.log_message:161- "GET /static/drf-yasg/swagger-ui-dist/swagger-ui.css.map HTTP/1.1" 404 1989
-WARNING 2022-08-17 10:45:24,801 django.server.log_message:161- "GET /static/drf-yasg/swagger-ui-dist/swagger-ui-bundle.js.map HTTP/1.1" 404 2007
-WARNING 2022-08-17 10:45:24,869 django.server.log_message:161- "GET /static/drf-yasg/swagger-ui-dist/swagger-ui-standalone-preset.js.map HTTP/1.1" 404 2040
+WARNING 2022-09-05 06:37:29,472 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 06:37:29,476 django.server.log_message:161- "GET /accounts/login/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 404 13859
+WARNING 2022-09-05 06:37:30,531 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 06:37:30,541 django.server.log_message:161- "GET /assets/fonts/metropolis/Metropolis-Regular.otf HTTP/1.1" 404 13582
+WARNING 2022-09-05 06:37:31,304 django.request.log_response:224- Not Found: /favicon.ico
+WARNING 2022-09-05 06:37:31,306 django.server.log_message:161- "GET /favicon.ico HTTP/1.1" 404 13442
+WARNING 2022-09-05 06:54:51,050 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 06:54:51,164 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 06:54:51,493 django.request.log_response:224- Not Found: /favicon.ico
+WARNING 2022-09-05 06:54:55,534 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 06:54:55,847 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 06:54:56,152 django.request.log_response:224- Not Found: /favicon.ico
+WARNING 2022-09-05 06:55:05,316 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 06:55:05,376 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
