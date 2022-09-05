@@ -20,7 +20,8 @@ gunicorn
 
 # third party apps
 django-summernote
-
+django-simple-captcha
+django-multi-captcha-admin
 
 # refactoring and tests
 black

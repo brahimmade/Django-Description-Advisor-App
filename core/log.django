@@ -12,3 +12,8 @@ WARNING 2022-09-05 06:54:55,847 django.request.log_response:224- Not Found: /ass
 WARNING 2022-09-05 06:54:56,152 django.request.log_response:224- Not Found: /favicon.ico
 WARNING 2022-09-05 06:55:05,316 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
 WARNING 2022-09-05 06:55:05,376 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 07:01:49,854 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 07:01:50,231 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 07:03:29,630 django.request.log_response:224- Not Found: /accounts/login/vendor/fontawesome-free/css/all.min.css
+WARNING 2022-09-05 07:03:29,835 django.request.log_response:224- Not Found: /assets/fonts/metropolis/Metropolis-Regular.otf
+WARNING 2022-09-05 07:03:54,852 django.request.log_response:224- Not Found: /favicon.ico

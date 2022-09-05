@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth import forms as form
 from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm
-
+from captcha.fields import CaptchaField
 
 User = get_user_model()
 
@@ -29,7 +29,7 @@ class RegisterForm(form.UserCreationForm):
 
 
 class AuthenticationForm(form.AuthenticationForm):
-
+    captcha = CaptchaField()
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -40,6 +40,7 @@ class AuthenticationForm(form.AuthenticationForm):
         self.fields['password'].widget.attrs.update(
             {'class': 'form-control form-control-user', 'placeholder': 'Password'})
         #self.fields['password'].label = ""
+        self.fields['captcha'].label = ""
 
 
 

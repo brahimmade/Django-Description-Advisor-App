@@ -43,6 +43,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('summernote/', include('django_summernote.urls')),
+    path('captcha/', include('captcha.urls')),
 
 ]
 
